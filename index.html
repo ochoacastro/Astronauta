@@ -3273,7 +3273,7 @@ let LOCKED_PLAYER_MODE = false;
     const params = new URLSearchParams(window.location.search);
     const urlLinkId = params.get('player');
     const lockedId = localStorage.getItem(LOCK_KEY);
-    const linkId = lockedId || urlLinkId;
+    const linkId = urlLinkId;
     if(!linkId) return;
     let idx = profiles.findIndex(p => p.id === linkId);
     if(idx === -1){
