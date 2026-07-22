@@ -617,15 +617,61 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 .qtype-slider .sl-confirm:active{transform:scale(.95);}
 .cbox.qtype-keyboard .cq-opts,
 .cbox.qtype-match .cq-opts,
-.cbox.qtype-slider .cq-opts{
+.cbox.qtype-slider .cq-opts,
+.cbox.qtype-truefalse .cq-opts,
+.cbox.qtype-pattern .cq-opts{
   display:block;
 }
 .cbox.qtype-keyboard .cq-text,
 .cbox.qtype-match .cq-text,
-.cbox.qtype-slider .cq-text{
+.cbox.qtype-slider .cq-text,
+.cbox.qtype-truefalse .cq-text,
+.cbox.qtype-pattern .cq-text{
   font-size:22px;
 }
 /* hammer modal removed */
+
+/* ── VERDADERO / FALSO ── */
+.qtype-truefalse .tf-hint{color:#888;font-size:11px;text-align:center;margin-bottom:8px;}
+.qtype-truefalse .tf-eq{
+  font-family:'Fredoka One';font-size:32px;color:#fff;text-align:center;
+  margin:6px 0 16px;text-shadow:0 0 16px rgba(255,179,0,0.5);
+}
+.qtype-truefalse .tf-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.qtype-truefalse .tf-opt{
+  border-radius:16px;padding:16px 8px;font-family:'Fredoka One';font-size:18px;
+  color:#fff;cursor:pointer;transition:all .12s;border:3px solid transparent;
+  text-shadow:0 2px 6px rgba(0,0,0,0.5);
+}
+.qtype-truefalse .tf-true{background:linear-gradient(135deg,#2e7d32,#43a047);border-color:#a5d6a7;box-shadow:0 5px 18px rgba(46,125,50,0.5);}
+.qtype-truefalse .tf-false{background:linear-gradient(135deg,#b71c1c,#ef5350);border-color:#ff8a80;box-shadow:0 5px 18px rgba(183,28,28,0.5);}
+.qtype-truefalse .tf-opt:active,.qtype-truefalse .tf-opt:hover{transform:scale(0.93);filter:brightness(1.15);}
+.qtype-truefalse .tf-opt.ok{background:linear-gradient(135deg,#00c853,#69f0ae)!important;border-color:#b9f6ca!important;box-shadow:0 0 0 4px rgba(0,200,83,0.35)!important;animation:optWiggle 0.35s ease!important;}
+.qtype-truefalse .tf-opt.no{background:linear-gradient(135deg,#b71c1c,#ef5350)!important;border-color:#ff8a80!important;box-shadow:0 0 0 4px rgba(183,28,28,0.35)!important;}
+
+/* ── ADIVINA EL PATRÓN ── */
+.qtype-pattern .pattern-hint{color:#888;font-size:11px;text-align:center;margin-bottom:10px;}
+.qtype-pattern .pattern-seq{
+  display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;
+}
+.qtype-pattern .pattern-item{
+  min-width:44px;padding:10px 6px;border-radius:12px;text-align:center;
+  font-family:'Fredoka One';font-size:20px;color:#fff;
+  background:rgba(124,58,237,0.15);border:2px solid rgba(124,58,237,0.35);
+}
+.qtype-pattern .pattern-item.blank{
+  color:#00eaff;border-color:#00eaff;background:rgba(0,220,255,0.12);
+  box-shadow:0 0 14px rgba(0,220,255,0.5);animation:blinkCursor 1s infinite;
+}
+.qtype-pattern .pattern-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.qtype-pattern .pattern-opt{
+  border-radius:16px;padding:14px 8px;font-family:'Fredoka One';font-size:22px;
+  color:#fff;cursor:pointer;transition:all .12s;border:3px solid transparent;
+  background:rgba(124,58,237,0.2);border-color:#7c3aed;text-shadow:0 2px 6px rgba(0,0,0,0.5);
+}
+.qtype-pattern .pattern-opt:active,.qtype-pattern .pattern-opt:hover{transform:scale(0.93);background:rgba(124,58,237,0.5);}
+.qtype-pattern .pattern-opt.ok{background:#16a34a!important;border-color:#22c55e!important;animation:pulse 0.3s;}
+.qtype-pattern .pattern-opt.no{background:#dc2626!important;border-color:#ef4444!important;animation:shake 0.35s;}
 
 /* ── MODAL DE REPASO POR ERROR ── */
 #reviewModal{
@@ -1819,6 +1865,15 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 </style>
 </head>
 <body>
+<audio id="moonBgMusic" loop preload="none">
+  <source src="hitslab-space-landscape-earth-music-335721.mp3" type="audio/mpeg">
+</audio>
+<audio id="bossBgMusic" loop preload="none">
+  <source src="juliush-universe-space-sounds-3595.mp3" type="audio/mpeg">
+</audio>
+<audio id="planetBgMusic" loop preload="none">
+  <source src="kulakovka-space-283176.mp3" type="audio/mpeg">
+</audio>
 <canvas id="canvas"></canvas>
 <canvas id="cinCanvas"></canvas>
 <div id="cinematic"><canvas id="winCinCanvas"></canvas></div>
@@ -4130,6 +4185,7 @@ const G = {
   chests:[],          // 10 cofres por planeta (uno por guardián)
   chestChallenge:null,// estado del desafío del cofre activo
   boss:null, bossChest:null, // boss final del planeta
+  pipe:null, inBossCave:false, lightPortal:null, // tubo de entrada, cueva del jefe y luz de salida
   treasures:[],        // tesoros ocultos en rutas secretas
   lockedDoors:[],      // puertas bloqueadas por guardianes
   terrainLayers:[],    // capas visuales 3D del terreno
@@ -4434,11 +4490,15 @@ let maleVoice = null;
 
 function loadVoices(){
   const voices = window.speechSynthesis.getVoices();
-  // Prefer male Spanish voice: look for es- voices, prefer ones with 'male', 'jorge', 'diego', 'pablo', or deeper pitch names
+  // Prefer Latin American Spanish voices (es-419, es-MX, es-US, es-AR, es-CO, etc.), evitando es-ES (España)
   const esVoices = voices.filter(v => v.lang.startsWith('es'));
-  // Try to find an explicitly male voice
-  maleVoice = esVoices.find(v => /jorge|diego|pablo|carlos|miguel|male/i.test(v.name))
-    || esVoices.find(v => !/female|mujer|mónica|paulina|esperanza|ximena|marisol|lucia/i.test(v.name))
+  const latamVoices = esVoices.filter(v => /es-(419|mx|us|ar|co|cl|pe|ve|ec|gt|cr|do|bo|py|uy|hn|sv|ni|pa)/i.test(v.lang));
+  const latamPool = latamVoices.length ? latamVoices : esVoices.filter(v => !/es-es/i.test(v.lang));
+  const pool = latamPool.length ? latamPool : esVoices;
+  // Try to find an explicitly male voice dentro del pool latino
+  maleVoice = pool.find(v => /jorge|diego|pablo|carlos|miguel|male/i.test(v.name))
+    || pool.find(v => !/female|mujer|mónica|paulina|esperanza|ximena|marisol|lucia/i.test(v.name))
+    || pool[0]
     || esVoices[0]
     || null;
 }
@@ -4455,7 +4515,7 @@ function speak(text, rate=1.0, pitch=0.8, onEnd=null){
     const wasSpeaking = ss.speaking;
     if(wasSpeaking) ss.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'es-ES';
+    u.lang = 'es-419';
     u.rate = rate;
     u.pitch = pitch;
     u.volume = 1;
@@ -6707,7 +6767,7 @@ function speakMoonCard(text, rate, pitch, onEnd){
     // Small delay after cancel to avoid Chrome/iOS silent-fail bug
     setTimeout(()=>{
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'es-ES'; u.rate = rate||1; u.pitch = pitch||0.8; u.volume = 1;
+      u.lang = 'es-419'; u.rate = rate||1; u.pitch = pitch||0.8; u.volume = 1;
       if(maleVoice) u.voice = maleVoice;
       const est = Math.max(800, text.length * 110);
       let called = false;
@@ -6930,7 +6990,7 @@ function _renderCardZoom(){
     window.speechSynthesis.cancel();
     setTimeout(()=>{
       const u = new SpeechSynthesisUtterance(`${card.table} por ${card.mult}`);
-      u.lang='es-ES'; u.rate=0.9; u.pitch=0.85;
+      u.lang='es-419'; u.rate=0.9; u.pitch=0.85;
       if(maleVoice) u.voice = maleVoice;
       window.speechSynthesis.speak(u);
     }, 80);
@@ -6950,7 +7010,7 @@ function _flipCardZoom(){
         ? `${card.answer}`
         : `${card.table} por ${card.mult}`;
       const u = new SpeechSynthesisUtterance(text);
-      u.lang='es-ES';
+      u.lang='es-419';
       u.rate = _zoomFlipped ? 0.8 : 0.9;
       u.pitch = _zoomFlipped ? 1.2 : 0.85;
       if(maleVoice) u.voice = maleVoice;
@@ -7026,7 +7086,7 @@ function speakCave(text, rate, pitch, onEnd){
   try{
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'es-ES';
+    u.lang = 'es-419';
     u.rate = rate || 1.0;
     u.pitch = pitch || 0.8;
     u.volume = 1;
@@ -7196,7 +7256,7 @@ function speakAndWait(text, rate, pitch, onStart){
   try{
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'es-ES';
+    u.lang = 'es-419';
     u.rate = rate || 0.85;
     u.pitch = pitch || 0.85;
     u.volume = 1;
@@ -7367,9 +7427,79 @@ function renderQMatch(titleEl, bodyEl, a, b, correct, table, onAnswer){
       const sl=selLeft;
       setTimeout(()=>{sl.classList.remove('wflash','sel');rDiv.classList.remove('wflash');},350);
       selLeft=null;
-      onAnswer(false, rDiv);
+      // La respuesta correcta que se muestra debe ser la del par que realmente falló,
+      // no siempre la del ejercicio principal (a × b)
+      onAnswer(false, rDiv, opMap[op]);
     }
   }
+}
+
+// ── VERDADERO / FALSO ─────────────────────────────────
+function renderQTrueFalse(titleEl, bodyEl, a, b, correct, onAnswer){
+  titleEl.textContent='';
+  const isTrue = Math.random() < 0.5;
+  let shown = correct;
+  if(!isTrue){
+    const step = Math.max(1, a);
+    const delta = (1 + Math.floor(Math.random()*3)) * step * (Math.random()<0.5?-1:1);
+    shown = correct + delta;
+    if(shown <= 0) shown = correct + step * (1 + Math.floor(Math.random()*3));
+    if(shown === correct) shown = correct + step;
+  }
+  speak(`¿Es verdadero o falso que ${a} por ${b} es igual a ${shown}?`, 1.0, 0.8);
+
+  const hint=document.createElement('div');hint.className='tf-hint';hint.textContent='¿Verdadero o falso?';
+  bodyEl.appendChild(hint);
+
+  const eq=document.createElement('div');eq.className='tf-eq';eq.textContent=`${a} × ${b} = ${shown}`;
+  bodyEl.appendChild(eq);
+
+  const wrap=document.createElement('div');wrap.className='tf-opts';
+  const trueBtn=document.createElement('div');trueBtn.className='tf-opt tf-true';trueBtn.textContent='✅ VERDADERO';
+  const falseBtn=document.createElement('div');falseBtn.className='tf-opt tf-false';falseBtn.textContent='❌ FALSO';
+  const handleTrue=ev=>{if(ev)ev.preventDefault();onAnswer(isTrue, trueBtn);};
+  const handleFalse=ev=>{if(ev)ev.preventDefault();onAnswer(!isTrue, falseBtn);};
+  trueBtn.addEventListener('touchstart',handleTrue,{passive:false});trueBtn.onclick=handleTrue;
+  falseBtn.addEventListener('touchstart',handleFalse,{passive:false});falseBtn.onclick=handleFalse;
+  wrap.appendChild(trueBtn);wrap.appendChild(falseBtn);
+  bodyEl.appendChild(wrap);
+}
+
+// ── ADIVINA EL PATRÓN ─────────────────────────────────
+function renderQPattern(titleEl, bodyEl, a, b, correct, onAnswer){
+  titleEl.textContent='';
+  speak(`¿Qué número falta en el patrón?`, 1.0, 0.8);
+
+  let start = b - 2;
+  if(start < 1) start = 1;
+  if(start + 4 > 10) start = 10 - 4;
+  if(start < 1) start = 1;
+  const positions=[start,start+1,start+2,start+3,start+4].filter(p=>p<=10);
+  let blankIdx = positions.indexOf(b);
+  if(blankIdx === -1) blankIdx = Math.min(2, positions.length-1);
+
+  const hint=document.createElement('div');hint.className='pattern-hint';hint.textContent='¿Qué número falta en el patrón?';
+  bodyEl.appendChild(hint);
+
+  const seqWrap=document.createElement('div');seqWrap.className='pattern-seq';
+  positions.forEach((p,i)=>{
+    const item=document.createElement('div');
+    item.className='pattern-item'+(i===blankIdx?' blank':'');
+    item.textContent=i===blankIdx?'?':(a*p);
+    seqWrap.appendChild(item);
+  });
+  bodyEl.appendChild(seqWrap);
+
+  const optsWrap=document.createElement('div');optsWrap.className='pattern-opts';
+  const opts=generateOptions(correct, a);
+  opts.forEach(o=>{
+    const btn=document.createElement('div');btn.className='pattern-opt';btn.textContent=o;
+    const handle=ev=>{if(ev)ev.preventDefault();onAnswer(o===correct, btn);};
+    btn.addEventListener('touchstart',handle,{passive:false});
+    btn.onclick=handle;
+    optsWrap.appendChild(btn);
+  });
+  bodyEl.appendChild(optsWrap);
 }
 
 // ── SLIDER ────────────────────────────────────────────
@@ -8447,10 +8577,56 @@ const PLANET_LAYOUTS = {
   },
 };
 
+// ═══════════════════════════════════════════════════════════
+//  MÚSICA DE FONDO — LUNA
+// ═══════════════════════════════════════════════════════════
+function playMoonMusic(){
+  const el = document.getElementById('moonBgMusic');
+  if(!el) return;
+  el.volume = 0.35;
+  el.currentTime = 0;
+  el.play().catch(()=>{});
+}
+function stopMoonMusic(){
+  const el = document.getElementById('moonBgMusic');
+  if(!el) return;
+  el.pause();
+  el.currentTime = 0;
+}
+
+function playBossMusic(){
+  const el = document.getElementById('bossBgMusic');
+  if(!el || !el.paused) return;
+  el.volume = 0.35;
+  el.play().catch(()=>{});
+}
+function stopBossMusic(){
+  const el = document.getElementById('bossBgMusic');
+  if(!el || el.paused) return;
+  el.pause();
+  el.currentTime = 0;
+}
+
+function playPlanetMusic(){
+  const el = document.getElementById('planetBgMusic');
+  if(!el || !el.paused) return;
+  el.volume = 0.35;
+  el.play().catch(()=>{});
+}
+function stopPlanetMusic(){
+  const el = document.getElementById('planetBgMusic');
+  if(!el || el.paused) return;
+  el.pause();
+  el.currentTime = 0;
+}
+
 function buildLevel(table){
   const gY=H*GYR;
   const planetIdx = G.planet;
   const isMoon = isMoonPlanet(planetIdx);
+  stopMoonMusic();
+  stopBossMusic();
+  stopPlanetMusic();
   const pl = PLANETS[planetIdx];
   const tbl = pl.isFinal ? 12 : (pl.table || table || 2); // actual multiplication table
 
@@ -8607,6 +8783,7 @@ function buildLevel(table){
     updateAmmoUI();
     // Ocultar barra de ammo en la luna (no se usa)
     document.getElementById('ammoBar').style.display='none';
+    playMoonMusic();
     return;
   }
 
@@ -8751,10 +8928,21 @@ function buildLevel(table){
       isBossChest: true,
       _attempts: 1,
     };
+    // ── TUBO: entrada a la cueva del jefe (estilo Mario) ──
+    const pipeX = bossX - 220;
+    const pipeGroundY = terrainYAt(pipeX + 23);
+    G.pipe = {
+      x: pipeX, y: pipeGroundY - 74, w: 46, h: 74,
+      groundY: pipeGroundY,
+      entered: false, challenged: false,
+    };
   } else {
     G.boss = null;
     G.bossChest = null;
+    G.pipe = null;
   }
+  G.inBossCave = false;
+  G.lightPortal = null;
 
   G.bullets=[]; G.particles=[]; G.playerBullets=[]; G.enemyBullets=[]; G.minions=[]; G.grenades=[];
   G.minionWavesLeft = MINION_MAX_WAVES;
@@ -8774,6 +8962,7 @@ function buildLevel(table){
   grenadeBoxes = [];
   spawnAmmoBoxes();
   updateAmmoUI();
+  playPlanetMusic();
 }
 
 function checkWin(){
@@ -8962,42 +9151,73 @@ function openChestChallenge(chest){
   document.getElementById('chestModal').style.display='flex';
 }
 
-let _chestQType = 2; // Siempre tipo Match
+let _chestQType = 2; // 1=Teclado, 2=Match, 3=Deslizador, 4=Verdadero/Falso, 5=Adivina el Patrón
 
 function renderChestQuestion(){
   const dc = G.chestChallenge;
   if(!dc) return;
   const q = dc.questions[0]; // Siempre usar la primera pregunta (1 sola)
 
-  // Barra de progreso empieza vacía, se llenará al completar el Match
+  // Barra de progreso empieza vacía, se llenará al completar la pregunta
   const progBar = document.getElementById('chestProgBar');
   if(progBar){ progBar.style.width = '0%'; }
 
   const prog = document.getElementById('chestProg'); if(prog) prog.innerHTML='';
 
   document.getElementById('chestQNum').textContent = `Pregunta 1 de 1`;
-  speak(`Une la operación correcta con su resultado`);
+
+  // Elegir tipo de pregunta al azar
+  const _chestTypes=[1,2,3,4,5];
+  _chestQType = _chestTypes[Math.floor(Math.random()*_chestTypes.length)];
 
   const cbox = document.querySelector('.cbox');
-  cbox.classList.remove('qtype-keyboard','qtype-match','qtype-slider','qtype-multiple');
-  cbox.classList.add('qtype-match');
+  cbox.classList.remove('qtype-keyboard','qtype-match','qtype-slider','qtype-multiple','qtype-truefalse','qtype-pattern');
 
   const qtEl = document.getElementById('chestQText');
   const optsEl = document.getElementById('chestQOpts');
   qtEl.textContent=''; optsEl.innerHTML='';
   document.getElementById('chestResult').textContent='';
 
-  renderQMatch(qtEl, optsEl, q.a, q.b, q.answer, q.a, (ok, btn) => {
+  const badge = document.getElementById('chestTypeBadge');
+  const handleResult=(ok, btn, wrongCorrectAns)=>{
     if(dc.animating) return;
     dc.animating = true;
-    document.querySelectorAll('.cq-opt,.nk,.mi,.sl-confirm').forEach(b=>b.style.pointerEvents='none');
+    document.querySelectorAll('.cq-opt,.tf-opt,.pattern-opt,.nk,.mi,.sl-confirm').forEach(b=>b.style.pointerEvents='none');
     if(ok){
       if(progBar){ progBar.style.width='100%'; }
       answerChest(ok, btn, null);
     } else {
-      answerChest(ok, btn, q.answer);
+      answerChest(ok, btn, wrongCorrectAns!==undefined ? wrongCorrectAns : q.answer);
     }
-  });
+  };
+
+  if(_chestQType===1){
+    // ── TECLADO ──
+    cbox.classList.add('qtype-keyboard');
+    if(badge){ badge.textContent='⌨️ Teclado'; badge.style.color='#7c4dff'; badge.style.background='#7c4dff18'; badge.style.boxShadow='0 0 12px #7c4dff55'; }
+    renderQKeyboard(qtEl, optsEl, q.a, q.b, q.answer, handleResult);
+  } else if(_chestQType===3){
+    // ── DESLIZADOR ──
+    cbox.classList.add('qtype-slider');
+    if(badge){ badge.textContent='🎚️ Deslizador'; badge.style.color='#c080ff'; badge.style.background='#c080ff18'; badge.style.boxShadow='0 0 12px #c080ff55'; }
+    renderQSlider(qtEl, optsEl, q.a, q.b, q.answer, handleResult);
+  } else if(_chestQType===4){
+    // ── VERDADERO / FALSO ──
+    cbox.classList.add('qtype-truefalse');
+    if(badge){ badge.textContent='🤔 Verdadero o Falso'; badge.style.color='#ffb300'; badge.style.background='#ffb30018'; badge.style.boxShadow='0 0 12px #ffb30055'; }
+    renderQTrueFalse(qtEl, optsEl, q.a, q.b, q.answer, handleResult);
+  } else if(_chestQType===5){
+    // ── ADIVINA EL PATRÓN ──
+    cbox.classList.add('qtype-pattern');
+    if(badge){ badge.textContent='🔍 Adivina el Patrón'; badge.style.color='#26c6da'; badge.style.background='#26c6da18'; badge.style.boxShadow='0 0 12px #26c6da55'; }
+    renderQPattern(qtEl, optsEl, q.a, q.b, q.answer, handleResult);
+  } else {
+    // ── MATCH (unir pares) ──
+    cbox.classList.add('qtype-match');
+    if(badge){ badge.textContent='🔗 Conectar'; badge.style.color='#26c6da'; badge.style.background='#26c6da18'; badge.style.boxShadow='0 0 12px #26c6da55'; }
+    speak(`Une la operación correcta con su resultado`);
+    renderQMatch(qtEl, optsEl, q.a, q.b, q.answer, q.a, handleResult);
+  }
 }
 
 function answerChest(ok, btn, correct){
@@ -9019,16 +9239,11 @@ function answerChest(ok, btn, correct){
     feedbackWrong(document.getElementById('chestResult'), correct);
     G.doorLives = Math.max(0, G.doorLives-1);
     updateHUD();
-    // Al fallar: mostrar tarjeta de repaso y volver al mismo Match
+    // Al fallar: solo mostrar cuál era la respuesta correcta y volver a intentar
     setTimeout(()=>{
       dc.animating=false;
-      const q2 = dc.questions[0];
-      document.getElementById('chestModal').style.display='none';
-      showReviewCard(q2.a, q2.b, ()=>{
-        document.getElementById('chestModal').style.display='flex';
-        renderChestQuestion();
-      });
-    }, 900);
+      renderChestQuestion();
+    }, 1200);
   }
 }
 
@@ -9092,9 +9307,8 @@ function finishChestChallenge(){
       const bossChestDone  = !G.bossChest || G.bossChest.opened;
       if(allOpened && G.enemies.every(e=>!e||e.dead) && bossDeadOrNone && bossChestDone){
         setTimeout(()=>{
-          G.flag.planted=true; G.state='flagplant'; sfx('win');
           floatText('🏆 ¡TODOS LOS COFRES ABIERTOS!', W/2-140, H*0.4,'#f0c040');
-          setTimeout(triggerWinCinematic, 1600);
+          spawnCaveExitLight();
         }, 800);
       } else if(allOpened && G.enemies.every(e=>!e||e.dead) && G.boss && !G.boss.dead){
         floatText('👑 ¡Derrota al Jefe Final!', W/2-120, H*0.35, '#ff0044');
@@ -9643,6 +9857,169 @@ function updateLavaDeathAnim(){
 // ═══════════════════════════════════════════════════════════
 //  WIN CINEMATIC
 // ═══════════════════════════════════════════════════════════
+// ─── Cinemática: entrar al tubo hacia la cueva del jefe ──
+function triggerPipeCinematic(){
+  G.state='cinematic';
+  const cinDiv=document.getElementById('cinematic');
+  cinDiv.style.display='block';
+  const cinC=document.getElementById('winCinCanvas');
+  cinC.width=window.innerWidth; cinC.height=window.innerHeight;
+  const cc=cinC.getContext('2d');
+  const pl=PLANETS[G.planet];
+  sfx('bulb');
+  let t=0; const TOTAL=95;
+  function pipeLoop(){
+    if(G.state!=='cinematic') return;
+    t++;
+    const cW=cinC.width, cH=cinC.height;
+    cc.clearRect(0,0,cW,cH);
+
+    // Fondo: cielo del planeta
+    const sk=cc.createLinearGradient(0,0,0,cH);
+    sk.addColorStop(0,pl.sky[0]); sk.addColorStop(1,pl.sky[1]);
+    cc.fillStyle=sk; cc.fillRect(0,0,cW,cH);
+
+    // Tubo verde centrado
+    const pipeW=Math.min(150,cW*0.28), pipeH=cH*0.42;
+    const px=cW/2-pipeW/2, py=cH*0.5;
+    cc.fillStyle='#0d5c1a';
+    cc.fillRect(px,py,pipeW,pipeH);
+    cc.fillStyle='#2fa83f';
+    cc.fillRect(px-16,py-28,pipeW+32,36);
+    cc.strokeStyle='#063a0d'; cc.lineWidth=4;
+    cc.strokeRect(px,py,pipeW,pipeH);
+    cc.strokeRect(px-16,py-28,pipeW+32,36);
+
+    // Astronauta descendiendo dentro del tubo
+    const descend=Math.min(t/60,1);
+    const charY=py-30+descend*90;
+    const charAlpha=1-Math.max(0,(descend-0.6))*2.5;
+    cc.save();
+    cc.globalAlpha=Math.max(0,Math.min(1,charAlpha));
+    cc.font='42px serif'; cc.textAlign='center';
+    cc.fillText('🧑‍🚀', cW/2, charY);
+    cc.restore();
+
+    // Texto
+    if(t<55){
+      cc.globalAlpha=Math.min(1,t/18);
+      cc.fillStyle='#fff'; cc.font="bold 20px 'Fredoka One'"; cc.textAlign='center';
+      cc.fillText('🕳️ Entrando a la cueva del jefe...', cW/2, cH*0.24);
+      cc.globalAlpha=1;
+    }
+
+    // Fundido a negro
+    if(t>60){
+      const fadePct=Math.min((t-60)/30,1);
+      cc.fillStyle=`rgba(0,0,0,${fadePct})`;
+      cc.fillRect(0,0,cW,cH);
+    }
+
+    if(t<TOTAL) requestAnimationFrame(pipeLoop);
+    else {
+      cinDiv.style.display='none';
+      G.inBossCave=true;
+      G.state='playing';
+      speak('Entraste a la cueva del jefe. ¡Cuidado!');
+      floatText('👑 ¡La cueva del jefe! Cuidado...', W/2-140, H*0.3, '#ff8844');
+    }
+  }
+  pipeLoop();
+}
+
+// ─── Aparece una luz de salida cuando el jefe ya fue vencido y su cofre abierto ──
+function spawnCaveExitLight(){
+  if(!G.pipe){
+    // Seguridad: planeta sin cueva, plantar bandera directo como antes
+    if(G.flag && !G.flag.planted){
+      P.vx=0; P.vy=0;
+      P.x = G.flag.x - P.w - 5;
+      P.y = terrainYAt(G.flag.x) - P.h;
+      G.flag.planted=true; G.state='flagplant'; sfx('win');
+      floatText('🚩 ¡BANDERA PLANTADA!', W/2-80, H*0.4,'#f0c040');
+      setTimeout(triggerWinCinematic, 1600);
+    }
+    return;
+  }
+  if(G.lightPortal || (G.flag && G.flag.planted)) return; // ya está esperando o ya se ganó
+  const lx = Math.min(LVL_W-80, (G.bossChest ? G.bossChest.x + 90 : P.x+140));
+  const ly = terrainYAt(lx+18);
+  G.lightPortal = { x:lx, y:ly-90, w:44, h:90, groundY:ly, entered:false };
+  floatText('✨ ¡Busca la luz para salir de la cueva!', W/2-150, H*0.32, '#aef7ff');
+  speak('Busca la luz para salir de la cueva');
+}
+
+// ─── Cinemática: entrar a la luz y subir a la superficie ──
+function triggerLightCinematic(){
+  G.state='cinematic';
+  const cinDiv=document.getElementById('cinematic');
+  cinDiv.style.display='block';
+  const cinC=document.getElementById('winCinCanvas');
+  cinC.width=window.innerWidth; cinC.height=window.innerHeight;
+  const cc=cinC.getContext('2d');
+  sfx('win');
+  let t=0; const TOTAL=100;
+  function lightLoop(){
+    if(G.state!=='cinematic') return;
+    t++;
+    const cW=cinC.width, cH=cinC.height;
+    cc.clearRect(0,0,cW,cH);
+
+    // Fondo oscuro de cueva
+    cc.fillStyle='#05030a'; cc.fillRect(0,0,cW,cH);
+
+    // Círculo de luz creciente en el centro
+    const glowPct=Math.min(t/TOTAL,1);
+    const maxR=Math.max(cW,cH)*1.15;
+    const r=Math.max(4,glowPct*maxR);
+    const grad=cc.createRadialGradient(cW/2,cH/2,0,cW/2,cH/2,r);
+    grad.addColorStop(0,'rgba(255,255,255,0.98)');
+    grad.addColorStop(0.35,'rgba(200,240,255,0.85)');
+    grad.addColorStop(1,'rgba(200,240,255,0)');
+    cc.fillStyle=grad;
+    cc.fillRect(0,0,cW,cH);
+
+    // Astronauta ascendiendo hacia la luz
+    const rise=Math.min(t/78,1);
+    cc.save();
+    cc.globalAlpha=Math.max(0,1-Math.max(0,(rise-0.7))*3.3);
+    cc.font='42px serif'; cc.textAlign='center';
+    cc.fillText('🧑‍🚀', cW/2, cH*0.62-rise*160);
+    cc.restore();
+
+    if(t<45){
+      cc.globalAlpha=Math.min(1,t/18);
+      cc.fillStyle='#222'; cc.font="bold 20px 'Fredoka One'"; cc.textAlign='center';
+      cc.fillText('✨ ¡Subiendo a la superficie!', cW/2, cH*0.2);
+      cc.globalAlpha=1;
+    }
+
+    if(t>=TOTAL-10){
+      const whitePct=Math.min((t-(TOTAL-10))/10,1);
+      cc.fillStyle=`rgba(255,255,255,${whitePct})`;
+      cc.fillRect(0,0,cW,cH);
+    }
+
+    if(t<TOTAL) requestAnimationFrame(lightLoop);
+    else {
+      cinDiv.style.display='none';
+      G.inBossCave=false;
+      G.lightPortal=null;
+      G.state='playing';
+      // Continúa con la secuencia habitual de bandera + despegue de la nave
+      if(G.flag && !G.flag.planted){
+        P.vx=0; P.vy=0;
+        P.x = G.flag.x - P.w - 5;
+        P.y = terrainYAt(G.flag.x) - P.h;
+        floatText('🚩 ¡BANDERA PLANTADA!', W/2-80, H*0.4,'#f0c040');
+        G.flag.planted=true; G.state='flagplant'; sfx('win');
+        setTimeout(triggerWinCinematic, 1400);
+      }
+    }
+  }
+  lightLoop();
+}
+
 function triggerWinCinematic(){
   G.state='cinematic';
   const cinDiv=document.getElementById('cinematic');
@@ -10288,11 +10665,35 @@ function update(){
     }
   }
 
+  // Tubo: pared sólida que bloquea el paso hasta disparar la cinemática de entrada a la cueva
+  if(G.state==='playing' && G.pipe && !G.pipe.entered){
+    const pp=G.pipe;
+    if(P.x+P.w>pp.x&&P.x<pp.x+pp.w&&P.y+P.h>0&&P.y<pp.groundY){
+      if(P.vx>0&&P.x+P.w/2<pp.x+pp.w/2){P.x=pp.x-P.w;P.vx=0;}
+      else if(P.vx<0&&P.x+P.w/2>pp.x+pp.w/2){P.x=pp.x+pp.w;P.vx=0;}
+      if(!pp.challenged){
+        pp.challenged=true;
+        setTimeout(()=>triggerPipeCinematic(),120);
+      }
+    }
+  }
+
+  // Portal de luz: aparece tras vencer al jefe y abrir su cofre; al tocarlo, sube a la superficie
+  if(G.state==='playing' && G.lightPortal && !G.lightPortal.entered){
+    const lp=G.lightPortal;
+    if(P.x+P.w>lp.x&&P.x<lp.x+lp.w&&P.y+P.h>lp.y&&P.y<lp.groundY){
+      lp.entered=true;
+      triggerLightCinematic();
+    }
+  }
+
   // Camera + zoom: gentle zoom when near enemy
   const near=G.enemies.find(e=>e&&!e.dead&&Math.abs((P.x+P.w/2)-(e.x+e.w/2))<220);
   const nearBoss = G.boss && !G.boss.dead && Math.abs((P.x+P.w/2)-(G.boss.x+G.boss.w/2))<280;
   if(nearBoss){
     const bs = G.boss;
+    playBossMusic();
+    stopPlanetMusic();
     // ── BOSS ARENA: cámara fija entre los dos ──────────────────────────────
     G.zoomTarget = 1.65;
     G.zoomCX = ((P.x+P.w/2) + (bs.x+bs.w/2)) / 2;
@@ -10319,6 +10720,8 @@ function update(){
   }
   G.zoom+=(G.zoomTarget-G.zoom)*0.07;
   if(!nearBoss){
+    stopBossMusic();
+    if(!isMoonPlanet(G.planet)) playPlanetMusic();
     // ── SCROLL BIDIRECCIONAL: la cámara sigue al jugador en ambas direcciones ──
     const rawCam=Math.max(0,Math.min(P.x-W*0.45,LVL_W-W));
     G.cameraX+=(rawCam-G.cameraX)*0.10;
@@ -11086,6 +11489,11 @@ function draw(){
     });
   }
 
+  // Tubo de entrada a la cueva del jefe
+  if(G.pipe && !G.pipe.entered){
+    drawPipe(G.pipe.x - G.cameraX, G.pipe);
+  }
+
   // Flag
   if(G.flag){
     const fx=G.flag.x-G.cameraX;
@@ -11152,6 +11560,10 @@ function draw(){
   // Draw boss chest
   if(G.bossChest && G.bossChest.visible){
     drawBossChest(G.bossChest.x-G.cameraX, G.bossChest);
+  }
+  // Draw portal de luz (salida de la cueva)
+  if(G.lightPortal && !G.lightPortal.entered){
+    drawLightPortal(G.lightPortal.x-G.cameraX, G.lightPortal);
   }
 
   // Dibujar vasayos
@@ -11498,7 +11910,95 @@ function draw(){
     ctx.fillText('🚩', mmX+mmW, mmY+mmH+10);
   }
 
+  // Overlay visual de la cueva del jefe (tinte oscuro + estalactitas)
+  if(G.inBossCave){
+    drawCaveOverlay();
+  }
+
   ctx.textAlign='left';
+}
+
+// ─── Dibujar tubo de entrada a la cueva del jefe (estilo Mario) ──
+function drawPipe(sx, pipe){
+  if(sx<-100||sx>W+100) return;
+  const t=Date.now()*0.003;
+  const w=pipe.w, h=pipe.h;
+  const bodyY=pipe.groundY-h+30;
+  // Cuerpo del tubo
+  const grad=ctx.createLinearGradient(sx,0,sx+w,0);
+  grad.addColorStop(0,'#0d5c1a'); grad.addColorStop(0.5,'#2fa83f'); grad.addColorStop(1,'#0d5c1a');
+  ctx.fillStyle=grad;
+  ctx.fillRect(sx, bodyY, w, pipe.groundY-bodyY);
+  ctx.strokeStyle='#063a0d'; ctx.lineWidth=3;
+  ctx.strokeRect(sx, bodyY, w, pipe.groundY-bodyY);
+  // Borde/tapa superior del tubo
+  const capW=w+14, capX=sx-7, capH=22;
+  const gradCap=ctx.createLinearGradient(capX,0,capX+capW,0);
+  gradCap.addColorStop(0,'#0d5c1a'); gradCap.addColorStop(0.5,'#3fcf50'); gradCap.addColorStop(1,'#0d5c1a');
+  ctx.fillStyle=gradCap;
+  ctx.fillRect(capX, bodyY-capH, capW, capH);
+  ctx.strokeRect(capX, bodyY-capH, capW, capH);
+  // Brillo pulsante + flecha invitando a entrar
+  const pulse=0.5+0.5*Math.sin(t*2);
+  ctx.globalAlpha=0.6+0.4*pulse;
+  ctx.fillStyle='#aef7c0';
+  ctx.font='16px serif'; ctx.textAlign='center';
+  ctx.fillText('⬇️', sx+w/2, bodyY-capH-10);
+  ctx.globalAlpha=1;
+  ctx.fillStyle='rgba(200,255,210,0.85)';
+  ctx.font="bold 10px 'Fredoka One'";
+  ctx.fillText('¡Cueva del Jefe!', sx+w/2, bodyY-capH-22);
+  ctx.textAlign='left';
+}
+
+// ─── Dibujar portal de luz (salida de la cueva) ──
+function drawLightPortal(sx, portal){
+  if(sx<-100||sx>W+100) return;
+  const t=Date.now()*0.004;
+  const cx=sx+portal.w/2, cy=portal.groundY-portal.h/2;
+  const pulse=0.7+0.3*Math.sin(t*2.2);
+  const r=portal.w*0.7*pulse;
+  const grad=ctx.createRadialGradient(cx,cy,2,cx,cy,r);
+  grad.addColorStop(0,'rgba(255,255,255,0.95)');
+  grad.addColorStop(0.5,'rgba(190,240,255,0.55)');
+  grad.addColorStop(1,'rgba(190,240,255,0)');
+  ctx.fillStyle=grad;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+  ctx.globalAlpha=0.85+0.15*pulse;
+  ctx.font='30px serif'; ctx.textAlign='center';
+  ctx.fillText('✨', cx, cy+10);
+  ctx.globalAlpha=1;
+  ctx.fillStyle='rgba(220,250,255,0.9)';
+  ctx.font="bold 10px 'Fredoka One'";
+  ctx.fillText('¡Luz de salida!', cx, cy-portal.h/2-8);
+  ctx.textAlign='left';
+}
+
+// ─── Overlay visual de la cueva del jefe ──
+function drawCaveOverlay(){
+  // Tinte oscuro general para dar sensación de interior
+  ctx.save();
+  ctx.globalAlpha=0.34;
+  ctx.fillStyle='#05030a';
+  ctx.fillRect(0,0,W,H);
+  ctx.restore();
+
+  // Viñeta ambar tenue (iluminación de antorchas)
+  const vg=ctx.createRadialGradient(W/2,H*0.55,H*0.15,W/2,H*0.55,H*0.85);
+  vg.addColorStop(0,'rgba(255,150,60,0.05)');
+  vg.addColorStop(1,'rgba(0,0,0,0.55)');
+  ctx.fillStyle=vg;
+  ctx.fillRect(0,0,W,H);
+
+  // Estalactitas en el techo
+  ctx.fillStyle='#1a0f10';
+  const spacing=90, t=Date.now()*0.0006;
+  for(let x=-((Date.now()*0.02)%spacing); x<W+spacing; x+=spacing){
+    const len=26+14*Math.sin((x+t*300)*0.01);
+    ctx.beginPath();
+    ctx.moveTo(x-16,0); ctx.lineTo(x+16,0); ctx.lineTo(x,len); ctx.closePath();
+    ctx.fill();
+  }
 }
 
 function drawRock(rx, ry, rw, rh, blocked){
@@ -12685,18 +13185,8 @@ function finishBossChestChallenge(){
   setTimeout(()=>showRewardModal(prize, rewardsList, 5, ()=>{
     updateHUD();
     floatText(`👑 ¡JEFE FINAL VENCIDO! +${basePoints}⭐`, W/2-160, H*0.32,'#ff0044');
-    // Auto-move player to flag and trigger cinematic
-    setTimeout(()=>{
-      if(G.flag && !G.flag.planted){
-        // Teleport player next to the flag
-        P.vx=0; P.vy=0;
-        P.x = G.flag.x - P.w - 5;
-        P.y = terrainYAt(G.flag.x) - P.h;
-        floatText('🚩 ¡BANDERA PLANTADA!', W/2-80, H*0.4,'#f0c040');
-        G.flag.planted=true; G.state='flagplant'; sfx('win');
-        setTimeout(triggerWinCinematic, 1600);
-      }
-    },800);
+    // En vez de teletransportar directo a la bandera, aparece una luz de salida en la cueva
+    setTimeout(()=>{ spawnCaveExitLight(); },800);
   }),300);
 }
 
@@ -13308,6 +13798,9 @@ function openPause(){
   G.state = 'paused';
   // Cancel any ongoing speech
   if(window.speechSynthesis) window.speechSynthesis.pause();
+  { const mb = document.getElementById('moonBgMusic'); if(mb && !mb.paused) mb.pause(); }
+  { const bb = document.getElementById('bossBgMusic'); if(bb && !bb.paused) bb.pause(); }
+  { const plb = document.getElementById('planetBgMusic'); if(plb && !plb.paused) plb.pause(); }
   // Update pause modal stats
   document.getElementById('pauseLives').textContent = '❤️'.repeat(Math.max(0,G.doorLives||G.lives));
   document.getElementById('pauseScore').textContent = `⭐ ${G.score}`;
@@ -13323,6 +13816,9 @@ function closePause(){
   G.state = _pausedState || 'playing';
   _pausedState = null;
   if(window.speechSynthesis) window.speechSynthesis.resume();
+  if(isMoonPlanet(G.planet)){ const mb = document.getElementById('moonBgMusic'); if(mb) mb.play().catch(()=>{}); }
+  { const bb = document.getElementById('bossBgMusic'); if(bb && bb.currentTime > 0 && G.boss && !G.boss.dead) bb.play().catch(()=>{}); }
+  { const plb = document.getElementById('planetBgMusic'); if(plb && plb.currentTime > 0 && !isMoonPlanet(G.planet)) plb.play().catch(()=>{}); }
   document.getElementById('pauseModal').style.display = 'none';
   document.getElementById('pauseBtn').textContent = '⏸';
   updateHUD();
@@ -13345,6 +13841,9 @@ document.getElementById('pauseMap').addEventListener('click', ()=>{
   _pausedState=null;
   document.getElementById('pauseBtn').textContent='⏸';
   if(window.speechSynthesis) window.speechSynthesis.cancel();
+  stopMoonMusic();
+  stopBossMusic();
+  stopPlanetMusic();
   showRouteMap();
 });
 document.getElementById('pauseMap').addEventListener('touchend', e=>{
@@ -13354,6 +13853,9 @@ document.getElementById('pauseMap').addEventListener('touchend', e=>{
   _pausedState=null;
   document.getElementById('pauseBtn').textContent='⏸';
   if(window.speechSynthesis) window.speechSynthesis.cancel();
+  stopMoonMusic();
+  stopBossMusic();
+  stopPlanetMusic();
   showRouteMap();
 },{passive:false});
 
@@ -13363,6 +13865,9 @@ document.getElementById('pauseExit').addEventListener('click', ()=>{
   _pausedState=null;
   document.getElementById('pauseBtn').textContent='⏸';
   if(window.speechSynthesis) window.speechSynthesis.cancel();
+  stopMoonMusic();
+  stopBossMusic();
+  stopPlanetMusic();
   showRouteMap();
 });
 document.getElementById('pauseExit').addEventListener('touchend', e=>{
@@ -13372,6 +13877,9 @@ document.getElementById('pauseExit').addEventListener('touchend', e=>{
   _pausedState=null;
   document.getElementById('pauseBtn').textContent='⏸';
   if(window.speechSynthesis) window.speechSynthesis.cancel();
+  stopMoonMusic();
+  stopBossMusic();
+  stopPlanetMusic();
   showRouteMap();
 },{passive:false});
 
