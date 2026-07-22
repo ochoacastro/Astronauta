@@ -289,18 +289,18 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 
 /* PAUSE BUTTON */
 #pauseBtn{
-  position:fixed;top:8px;left:50%;transform:translateX(-50%);
+  position:fixed;bottom:6px;right:16px;
   z-index:25;pointer-events:auto;
-  width:38px;height:38px;border-radius:50%;
+  width:34px;height:34px;border-radius:50%;
   background:rgba(10,10,40,0.80);
   border:2px solid rgba(255,255,255,0.25);
-  color:#fff;font-size:16px;cursor:pointer;
+  color:#fff;font-size:14px;cursor:pointer;
   display:none;align-items:center;justify-content:center;
   box-shadow:0 2px 10px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.12);
   backdrop-filter:blur(4px);
   transition:background 0.1s,transform 0.1s;
 }
-#pauseBtn:active{background:rgba(80,140,255,0.5);transform:translateX(-50%) scale(0.9);}
+#pauseBtn:active{background:rgba(80,140,255,0.5);transform:scale(0.9);}
 
 /* PAUSE MODAL */
 #pauseModal{
@@ -359,6 +359,7 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 #chestModal{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;
   background:rgba(0,0,12,0.96);backdrop-filter:blur(12px);}
 .cbox{
+  position:relative;
   background:linear-gradient(160deg,#0c1430 0%,#08102a 50%,#0c1430 100%);
   border:2px solid rgba(110,90,240,0.4);
   border-radius:28px;padding:16px 16px 12px;
@@ -458,6 +459,19 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
   position:absolute;top:5px;left:8px;
   font-size:11px;font-weight:900;opacity:0.75;letter-spacing:0.5px;
   font-family:'Fredoka One';
+}
+
+/* Opciones del jefe: 4 en círculo, sin colores distintivos */
+.cq-opts.circle4{
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  gap:20px;position:relative;width:100%;max-width:260px;aspect-ratio:1;margin:18px auto 6px;
+}
+.cq-opts.circle4 .cq-opt{
+  position:static;width:auto;height:auto;aspect-ratio:1;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;padding:0;
+  background:linear-gradient(135deg,#2b2b45,#1a1a2e)!important;
+  border-color:rgba(255,255,255,0.28)!important;
+  box-shadow:0 5px 16px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.12)!important;
 }
 .cprog{display:none;}
 .cpip,.cpip.done,.cpip.active,.cpip.wrong{}
@@ -615,6 +629,27 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
   box-shadow:0 4px 18px rgba(150,0,255,.4);transition:transform .1s;
 }
 .qtype-slider .sl-confirm:active{transform:scale(.95);}
+
+/* ARRASTRAR (drag & drop) */
+.qtype-drag .drag-eq{color:#fff;font-size:32px;font-weight:900;margin:8px 0 18px;text-align:center;}
+.qtype-drag .drag-slot{
+  display:inline-block;min-width:56px;padding:2px 10px;border-radius:12px;
+  border:3px dashed #ffb300;color:#ffb300;text-shadow:0 0 14px #ffb300;
+  vertical-align:middle;text-align:center;
+}
+.qtype-drag .drag-slot.filled{border-style:solid;background:rgba(255,179,0,0.18);}
+.qtype-drag .drag-hint{color:#888;font-size:11px;text-align:center;margin-bottom:10px;}
+.qtype-drag .drag-opts{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:6px;}
+.qtype-drag .drag-chip{
+  padding:14px 18px;border-radius:14px;text-align:center;min-width:44px;
+  font-family:'Fredoka One',sans-serif;font-size:22px;color:#fff;
+  border:2px solid rgba(255,179,0,0.45);background:rgba(255,179,0,0.15);
+  box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,.08);
+  cursor:grab;user-select:none;touch-action:none;transition:transform .1s;
+}
+.qtype-drag .drag-chip.dragging{cursor:grabbing;transform:scale(1.12);box-shadow:0 8px 24px rgba(0,0,0,0.6);}
+.qtype-drag .drag-chip.ok{background:rgba(0,200,80,0.3)!important;border-color:#22c55e!important;}
+.qtype-drag .drag-chip.no{background:rgba(220,0,0,0.25)!important;border-color:#ef4444!important;}
 .cbox.qtype-keyboard .cq-opts,
 .cbox.qtype-match .cq-opts,
 .cbox.qtype-slider .cq-opts,
@@ -813,6 +848,20 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 .cave-btn.green{background:rgba(34,197,94,0.25);border-color:#22c55e;}
 .cave-btn.green:active{background:rgba(34,197,94,0.5);}
 .cave-phase{color:#a8e6ff;font-size:12px;font-weight:700;text-align:center;margin-top:6px;}
+
+/* Laberinto del jefe */
+#bossMazeModal{position:fixed;inset:0;z-index:210;display:none;background:#05030a;}
+.maze-inner{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:14px 10px;box-sizing:border-box;overflow:auto;}
+.maze-title{font-family:'Fredoka One';font-size:20px;color:#f0c040;text-shadow:0 0 14px #f0a020;text-align:center;}
+.maze-sub{color:#bda8e6;font-size:12px;margin:2px 0 10px;text-align:center;}
+.maze-stats{color:#8ae6ff;font-size:12px;font-weight:700;margin-bottom:8px;}
+#mazeCanvas{border:3px solid #7c3aed;border-radius:14px;box-shadow:0 0 24px rgba(124,58,237,0.55);background:#0a0612;max-width:92vw;max-height:50vh;}
+.maze-pad{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.maze-pad-row{display:flex;gap:8px;}
+.maze-btn{background:rgba(124,58,237,0.3);border:2px solid #7c3aed;border-radius:14px;
+  width:56px;height:48px;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.maze-btn:active{background:rgba(124,58,237,0.6);}
+.maze-hint{color:#9080cc;font-size:11px;margin-top:10px;text-align:center;max-width:320px;}
 
 /* CIN CANVAS overlay */
 #cinCanvas{position:fixed;inset:0;z-index:300;display:none;pointer-events:none;}
@@ -2336,8 +2385,34 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 </div>
 
 <!-- CHEST MODAL -->
+<!-- LABERINTO DE LA CUEVA — antes de cada jefe final -->
+<div id="bossMazeModal">
+  <div class="maze-inner">
+    <div class="maze-title">🕸️ LABERINTO DE LA CUEVA</div>
+    <div class="maze-sub">Encuentra el camino hasta el jefe 👹</div>
+    <div class="maze-stats" id="mazeStats">Movimientos: 0</div>
+    <canvas id="mazeCanvas"></canvas>
+    <div class="maze-pad">
+      <button class="maze-btn" id="mazeUp">⬆️</button>
+      <div class="maze-pad-row">
+        <button class="maze-btn" id="mazeLeft">⬅️</button>
+        <button class="maze-btn" id="mazeDown">⬇️</button>
+        <button class="maze-btn" id="mazeRight">➡️</button>
+      </div>
+    </div>
+    <div class="maze-hint">Usa las flechas del teclado o los botones. Llega al 👹 para enfrentar al jefe.</div>
+  </div>
+</div>
+
 <div id="chestModal">
   <div class="cbox">
+    <div id="chestCountdownOverlay" style="display:none;position:absolute;inset:0;z-index:5;background:rgba(5,3,12,0.94);border-radius:26px;flex-direction:column;align-items:center;justify-content:center;">
+      <div id="chestCountdownAsk" style="display:flex;flex-direction:column;align-items:center;">
+        <div style="color:#f0c040;font-family:'Fredoka One';font-size:17px;letter-spacing:0.5px;margin-bottom:16px;text-shadow:0 0 12px #f0a020;text-align:center;padding:0 20px;">¿Estás listo o lista?</div>
+        <button id="chestCountdownGoBtn" style="background:linear-gradient(135deg,#ff8c42,#ff5e3a);border:none;border-radius:50px;padding:13px 32px;color:#fff;font-family:'Fredoka One';font-size:16px;box-shadow:0 6px 18px rgba(255,94,58,0.5);cursor:pointer;">🚀 Let's go!</button>
+      </div>
+      <div id="chestCountdownNum" style="display:none;color:#fff;font-family:'Fredoka One';font-size:88px;line-height:1;text-shadow:0 0 30px #ff8844;">5</div>
+    </div>
     <div class="ctype-badge" id="chestTypeBadge">🔘 Selección</div>
     <div style="font-size:30px;margin-bottom:2px;" id="chestIcon">📦</div>
     <div class="ctitle" id="chestTitle">¡COFRE DEL GUARDIÁN!</div>
@@ -2352,6 +2427,15 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
       <div class="cprog-bar-fill" id="chestProgBar"></div>
     </div>
     <div class="cprog" id="chestProg"></div>
+    <div id="chestTimerWrap" style="display:none;width:100%;max-width:280px;margin:6px auto 2px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <span style="color:#8ae6ff;font-size:11px;font-weight:700;">⏱️ Tiempo</span>
+        <span id="chestTimerNum" style="color:#8ae6ff;font-size:11px;font-weight:700;">12s</span>
+      </div>
+      <div style="height:8px;background:rgba(255,255,255,0.12);border-radius:4px;overflow:hidden;">
+        <div id="chestTimerFill" style="height:100%;width:100%;background:#4ade80;border-radius:4px;"></div>
+      </div>
+    </div>
     <div class="cq-wrap">
       <div class="cq-num" id="chestQNum">Pregunta 1 de 1</div>
       <div class="cq-text" id="chestQText">? × ? = ?</div>
@@ -2798,7 +2882,7 @@ function terrainYAt(worldX){
   const b  = G.terrain[Math.max(0,Math.min(i+1, G.terrain.length-1))];
   return a+(b-a)*f;
 }
-const keys = {left:false, right:false, shoot:false};
+const keys = {left:false, right:false, shoot:false, down:false};
 let stars = [];
 let ac; // AudioContext - shared across sfx + Netflix intro
 
@@ -3515,6 +3599,7 @@ function loadProfileData(){
   conquered.splice(0, conquered.length, ..._c);
   // coins
   G.coins = parseInt(localStorage.getItem(pk('coins'))||'0');
+  G.coinsTowardLife = parseInt(localStorage.getItem(pk('coinsTowardLife'))||'0');
   // cards
   const raw_k = localStorage.getItem(pk('cards'));
   const _cards = raw_k ? JSON.parse(raw_k) : {};
@@ -4181,11 +4266,12 @@ const G = {
   coins: parseInt(localStorage.getItem(profileKey('coins'))||'0'),
   cameraX:0, zoom:1, zoomTarget:1, zoomCX:0, zoomCY:0,
   enemies:[], bullets:[], playerBullets:[], minions:[], particles:[], platforms:[], rocks:[], grenades:[],
-  heartItems:[], platEnemies:[], platCandies:[],
+  heartItems:[], platEnemies:[], platCandies:[], scatterCoins:[], // monedas regadas por el nivel, estilo Sonic
   chests:[],          // 10 cofres por planeta (uno por guardián)
   chestChallenge:null,// estado del desafío del cofre activo
   boss:null, bossChest:null, // boss final del planeta
   pipe:null, inBossCave:false, lightPortal:null, // tubo de entrada, cueva del jefe y luz de salida
+  giantRock:null, exitPipe:null, // roca gigante que tapa la vista tras el tubo y tubo de salida dentro de la cueva
   treasures:[],        // tesoros ocultos en rutas secretas
   lockedDoors:[],      // puertas bloqueadas por guardianes
   terrainLayers:[],    // capas visuales 3D del terreno
@@ -7131,9 +7217,14 @@ try{ document.getElementById('caveExit').addEventListener('click', ()=>{
 // Token de sesión para evitar que listeners viejos afecten nuevas sesiones
 let _reviewSession = 0;
 
-function showReviewCard(tableA, tableB, onDone){
-  const correct = tableA * tableB;
-  const REPS = 3;
+function showReviewCard(tableA, tableB, onDone, opType){
+  opType = opType || 'mult';
+  let correct, qText, qSpeech;
+  if(opType==='add'){ correct = tableA + tableB; qText = tableA + ' + ' + tableB + ' = ?'; qSpeech = tableA + ' más ' + tableB; }
+  else if(opType==='sub'){ correct = tableA - tableB; qText = tableA + ' − ' + tableB + ' = ?'; qSpeech = tableA + ' menos ' + tableB; }
+  else if(opType==='div'){ correct = tableA / tableB; qText = tableA + ' ÷ ' + tableB + ' = ?'; qSpeech = tableA + ' dividido entre ' + tableB; }
+  else { correct = tableA * tableB; qText = tableA + ' × ' + tableB + ' = ?'; qSpeech = tableA + ' por ' + tableB; }
+  const REPS = 1;
   const session = ++_reviewSession;
 
   let currentRep = 0;
@@ -7178,7 +7269,7 @@ function showReviewCard(tableA, tableB, onDone){
     subEl.textContent = '\u{1F50A} Escucha la pregunta... (vuelta ' + (rep + 1) + ' de ' + REPS + ')';
 
     // Leer pregunta — bloquea giro hasta que termine
-    speakCave(tableA + ' por ' + tableB, 0.85, 0.85, ()=>{
+    speakCave(qSpeech, 0.85, 0.85, ()=>{
       if(!alive()) return;
       phase = 'wait_flip';
       cardWrap.style.animation = 'reviewCardPulse 0.7s ease-in-out infinite alternate';
@@ -7221,7 +7312,7 @@ function showReviewCard(tableA, tableB, onDone){
     });
   }
 
-  document.getElementById('reviewQ').textContent = tableA + ' \u00d7 ' + tableB + ' = ?';
+  document.getElementById('reviewQ').textContent = qText;
   document.getElementById('reviewA').textContent = correct;
   btn.classList.remove('ready');
   btn.onclick = null;
@@ -7287,6 +7378,95 @@ function speakAndWait(text, rate, pitch, onStart){
 // ═══════════════════════════════════════════════════════
 
 // ── TECLADO ──────────────────────────────────────────
+// ── ARRASTRAR (drag & drop: arrastra el número correcto al espacio) ──
+function renderQDrag(titleEl, bodyEl, a, b, correct, onAnswer){
+  titleEl.innerHTML = `<div class="drag-eq">${a} × ${b} = <span class="drag-slot" id="dragSlot">?</span></div>`;
+  speak(`Escoge la respuesta correcta y ponla en su lugar. ${a} por ${b}`, 1.0, 0.8);
+
+  const hint = document.createElement('div');
+  hint.className='drag-hint';
+  hint.textContent='Arrastra el número correcto hasta el espacio';
+  bodyEl.appendChild(hint);
+
+  const opts = generateOptions(correct, Math.max(1,a));
+  const wrap = document.createElement('div'); wrap.className='drag-opts';
+  bodyEl.appendChild(wrap);
+  const slot = titleEl.querySelector('#dragSlot');
+  let answered = false;
+
+  opts.forEach(o=>{
+    const chip = document.createElement('div');
+    chip.className='drag-chip';
+    chip.textContent = o;
+
+    let dragging=false, offX=0, offY=0, origW=0;
+
+    function start(clientX, clientY){
+      if(answered) return;
+      dragging=true;
+      const r = chip.getBoundingClientRect();
+      offX = clientX-r.left; offY = clientY-r.top;
+      origW = r.width;
+      chip.classList.add('dragging');
+      chip.style.position='fixed';
+      chip.style.width=origW+'px';
+      chip.style.zIndex=1000;
+      chip.style.left=(clientX-offX)+'px';
+      chip.style.top=(clientY-offY)+'px';
+    }
+    function move(clientX, clientY){
+      if(!dragging) return;
+      chip.style.left=(clientX-offX)+'px';
+      chip.style.top=(clientY-offY)+'px';
+    }
+    function reset(){
+      chip.classList.remove('dragging');
+      chip.style.position='';
+      chip.style.left=''; chip.style.top=''; chip.style.width=''; chip.style.zIndex='';
+    }
+    function end(clientX, clientY){
+      if(!dragging) return;
+      dragging=false;
+      const sr = slot.getBoundingClientRect();
+      const overlap = clientX>=sr.left-14 && clientX<=sr.right+14 && clientY>=sr.top-14 && clientY<=sr.bottom+14;
+      reset();
+      if(overlap && !answered){
+        answered = true;
+        slot.textContent = o;
+        slot.classList.add('filled');
+        wrap.querySelectorAll('.drag-chip').forEach(c=>{ c.style.pointerEvents='none'; c.style.opacity= c===chip ? '1' : '0.35'; });
+        setTimeout(()=>{ onAnswer(o===correct, chip); }, 250);
+      }
+    }
+    chip.addEventListener('touchstart', e=>{ e.preventDefault(); const t=e.touches[0]; start(t.clientX,t.clientY); }, {passive:false});
+    chip.addEventListener('touchmove', e=>{ e.preventDefault(); const t=e.touches[0]; move(t.clientX,t.clientY); }, {passive:false});
+    chip.addEventListener('touchend', e=>{ const t=e.changedTouches[0]; end(t.clientX,t.clientY); });
+    chip.addEventListener('mousedown', e=>{
+      e.preventDefault();
+      start(e.clientX,e.clientY);
+      const mm = ev=>move(ev.clientX,ev.clientY);
+      const mu = ev=>{ end(ev.clientX,ev.clientY); window.removeEventListener('mousemove',mm); window.removeEventListener('mouseup',mu); };
+      window.addEventListener('mousemove',mm); window.addEventListener('mouseup',mu);
+    });
+    wrap.appendChild(chip);
+  });
+}
+
+// ── OPCIÓN MÚLTIPLE (4 opciones clásicas) ──
+function renderQMultiple(titleEl, bodyEl, a, b, correct, onAnswer){
+  titleEl.textContent = `${a} × ${b} = ?`;
+  speak(`${a} por ${b}`, 1.0, 0.8);
+  const opts = generateOptions(correct, Math.max(1,a));
+  opts.forEach(o=>{
+    const btn=document.createElement('div');
+    btn.className='cq-opt'; btn.textContent=o;
+    const answer=(ev)=>{ ev.preventDefault(); onAnswer(o===correct, btn); };
+    btn.addEventListener('touchstart',answer,{passive:false});
+    btn.onclick=answer;
+    bodyEl.appendChild(btn);
+  });
+}
+
 function renderQKeyboard(titleEl, bodyEl, a, b, correct, onAnswer){
   titleEl.innerHTML='';
   let input='';
@@ -7582,6 +7762,29 @@ function renderQSlider(titleEl, bodyEl, a, b, correct, onAnswer){
   bodyEl.appendChild(confirmBtn);
 }
 
+// ── Reparte multiplicadores para las batallas: en orden ×1..×10, luego al azar sin repetir ──
+function drawNextMultipliers(n){
+  const qp = G.qProgress;
+  const out = [];
+  for(let i=0;i<n;i++){
+    if(qp.ptr < 10){
+      out.push(qp.ptr+1);
+      qp.ptr++;
+    } else {
+      if(qp.randomBag.length===0){
+        qp.randomBag = shuffleArr([1,2,3,4,5,6,7,8,9,10]);
+        // Evitar que el primero del nuevo mazo repita el último que salió
+        if(out.length && qp.randomBag[0]===out[out.length-1] && qp.randomBag.length>1){
+          const j = 1+Math.floor(Math.random()*(qp.randomBag.length-1));
+          [qp.randomBag[0],qp.randomBag[j]]=[qp.randomBag[j],qp.randomBag[0]];
+        }
+      }
+      out.push(qp.randomBag.shift());
+    }
+  }
+  return out;
+}
+
 function buildBattleQuestions(table){
   // isFinal planet: table===0 means random from all tables
   if(table === 0){
@@ -7593,9 +7796,9 @@ function buildBattleQuestions(table){
     }
     return q;
   }
-  // All 10 multipliers, ordered first
-  const ordered = [1,2,3,4,5,6,7,8,9,10].map(m=>({multiplier:m,correct:table*m,a:table,b:m,asked:false,answeredOk:false}));
-  return ordered;
+  // Continúa la secuencia persistente del planeta: ordenado ×1..×10, luego al azar sin repetir
+  const mults = drawNextMultipliers(5);
+  return mults.map(m=>({multiplier:m, correct:table*m, a:table, b:m, asked:false, answeredOk:false}));
 }
 
 function startBattle(enemy){
@@ -7621,7 +7824,8 @@ function startBattle(enemy){
   // Ajustar cámara para que el centro quede en el centro de pantalla
   G.cameraX = midX - W / 2;
 
-  // Build question queue: ordered 1-10, then shuffle remaining
+  // Build question queue: continúa la secuencia persistente del planeta (ordenado 1-10, luego al azar)
+  const wasOrdered = !(G.qProgress && G.qProgress.table===enemy.table) || G.qProgress.ptr < 10;
   const allQ = buildBattleQuestions(enemy.table);
   // Take 5 for this battle, ordered first
   const qs = allQ.slice(0,5);
@@ -7633,7 +7837,7 @@ function startBattle(enemy){
     errors:0,
     results:[],
     animating:false,
-    phase:'ordered', // 'ordered' or 'random'
+    phase: wasOrdered ? 'ordered' : 'random', // refleja el progreso real del planeta
     wrongPending:[], // wrong answers to re-ask
   };
   renderBattleModal();
@@ -8081,7 +8285,7 @@ function startLifeChallenge(heartItem){
         feedbackCorrect(document.getElementById('lifeResult'), '❤️ ¡VIDA GANADA!');
         setTimeout(()=>{
           document.getElementById('lifeModal').style.display='none';
-          G.doorLives=Math.min(3,G.doorLives+1); updateHUD();
+          G.doorLives=Math.min(5,G.doorLives+1); updateHUD();
           floatText('❤️ +1 vida',heartItem.x-G.cameraX,heartItem.y-30,'#ff4488');
           G.state='playing';
         },900);
@@ -8620,6 +8824,25 @@ function stopPlanetMusic(){
   el.currentTime = 0;
 }
 
+// ── Monedas regadas por el nivel en arcos, estilo anillos de Sonic ──
+function generateScatterCoins(startX, endX){
+  const coins = [];
+  const gap = 260;
+  for(let cx = startX; cx < endX; cx += gap){
+    const overHazard = G.rocks.some(r => (r.type==='lava'||r.type==='water') && cx+130 > r.x && cx < r.x+r.w+30);
+    if(overHazard) continue;
+    const groundY = terrainYAt(cx + 60);
+    const arcCount = 5;
+    for(let i=0; i<arcCount; i++){
+      const t = i/(arcCount-1);
+      const arcX = cx + t*120;
+      const arcHeight = Math.sin(t*Math.PI) * 55;
+      coins.push({ x: arcX, y: groundY - 40 - arcHeight, w: 18, h: 18, collected:false });
+    }
+  }
+  return coins;
+}
+
 function buildLevel(table){
   const gY=H*GYR;
   const planetIdx = G.planet;
@@ -8629,6 +8852,10 @@ function buildLevel(table){
   stopPlanetMusic();
   const pl = PLANETS[planetIdx];
   const tbl = pl.isFinal ? 12 : (pl.table || table || 2); // actual multiplication table
+
+  // ── Progreso secuencial de preguntas para este planeta: en orden ×1..×10, luego aleatorio sin repetir ──
+  G.qProgress = { table: tbl, ptr: 0, randomBag: [] };
+  G.chestMultBag = []; G._lastChestMult = null; // bolsa de multiplicadores sin repetir para preguntas de cofres
 
   // Choose layout by table number (2-12), Moon gets flat layout
   const layoutFn = isMoon
@@ -8720,6 +8947,7 @@ function buildLevel(table){
     G.heartItems = [];
     G.platEnemies = [];
     G.platCandies = [];
+    G.scatterCoins = generateScatterCoins(180, LVL_W - 300);
     G.minionWavesLeft = 0;
     _minionTimer = 9999;
     G.chests = [];
@@ -8803,18 +9031,20 @@ function buildLevel(table){
     };
   });
 
-  // Heart items
-  const livesLost = Math.max(0, 3 - G.doorLives);
+  // Heart items: siempre 2 vidas extra por planeta, en las plataformas dispersas
   G.heartItems = [];
-  if(livesLost > 0){
+  {
     const usable = G.platforms.slice(1, G.platforms.length-1);
-    const step = Math.floor(usable.length / (livesLost + 1));
-    for(let i = 0; i < livesLost; i++){
-      const plHP = usable[Math.min((i+1)*step, usable.length-1)];
-      G.heartItems.push({
-        x: plHP.x + plHP.w/2 - 12, y: plHP.y - 32,
-        w: 24, h: 28, collected: false,
-      });
+    const heartCount = Math.min(2, usable.length);
+    if(heartCount > 0){
+      const step = Math.max(1, Math.floor(usable.length / (heartCount + 1)));
+      for(let i = 0; i < heartCount; i++){
+        const plHP = usable[Math.min((i+1)*step, usable.length-1)];
+        G.heartItems.push({
+          x: plHP.x + plHP.w/2 - 12, y: plHP.y - 32,
+          w: 24, h: 28, collected: false,
+        });
+      }
     }
   }
 
@@ -8929,17 +9159,89 @@ function buildLevel(table){
       _attempts: 1,
     };
     // ── TUBO: entrada a la cueva del jefe (estilo Mario) ──
-    const pipeX = bossX - 220;
+    // La cueva ahora es un recorrido real con bifurcaciones, no un pasillo corto.
+    const caveLen = Math.min(750, 500 + G.planet * 25);
+    const pipeX = bossX - caveLen;
     const pipeGroundY = terrainYAt(pipeX + 23);
     G.pipe = {
       x: pipeX, y: pipeGroundY - 74, w: 46, h: 74,
       groundY: pipeGroundY,
       entered: false, challenged: false,
     };
+    // ── ROCA GIGANTE: tapa toda la vista a la derecha del tubo (nada se ve más allá) ──
+    const rockX = pipeX + 46 + 4;
+    const rockW = 90;
+    G.giantRock = {
+      x: rockX, w: rockW,
+      groundY: terrainYAt(rockX + rockW/2),
+    };
+    // ── TUBO DE SALIDA: donde el jugador reaparece dentro de la cueva, justo detrás de la roca ──
+    const exitPipeX = rockX + rockW - 40;
+    G.exitPipe = {
+      x: exitPipeX, w: 46, h: 74,
+      groundY: terrainYAt(exitPipeX + 23),
+    };
+
+    // ── MONEDAS REGADAS POR EL NIVEL, estilo anillos de Sonic ──
+    G.scatterCoins = generateScatterCoins(180, pipeX - 150);
+
+    // ── BIFURCACIONES DE LA CUEVA: caminos elevados sin salida con mini-enemigos ──
+    const caveInnerStart = exitPipeX + 80;
+    const caveInnerEnd = bossX - 90;
+    const caveSpan = Math.max(200, caveInnerEnd - caveInnerStart);
+    const forkCount = caveSpan > 550 ? 3 : (caveSpan > 320 ? 2 : 1);
+    G.caveBranchPlatforms = [];
+    for(let f=0; f<forkCount; f++){
+      const forkX = caveInnerStart + (caveSpan/(forkCount+1))*(f+1);
+      const forkGroundY = terrainYAt(forkX);
+      // 2-3 plataformas que suben y terminan en el aire: camino sin salida, hay que devolverse
+      const steps = 2 + (f % 2);
+      let px = forkX, py = forkGroundY - 60;
+      let lastPlat = null;
+      for(let s=0; s<steps; s++){
+        const plat = {x:px, y:py, w:70, isCaveBranch:true};
+        G.platforms.push(plat);
+        G.caveBranchPlatforms.push(plat);
+        lastPlat = plat;
+        px += 78 + (s%2)*18;
+        py -= 46;
+      }
+      // Mini-enemigo guardando el final del camino sin salida
+      G.platEnemies.push({
+        x: lastPlat.x + lastPlat.w/2 - 11, y: lastPlat.y - 26,
+        w:22, h:26,
+        platX: lastPlat.x, platW: lastPlat.w,
+        dir: 1, speed: eStyle.speed * 0.6,
+        frame:0, ft:0, dead:false, deadTimer:0,
+        monsterStyle: eStyle.type,
+        table: pl.isFinal ? 0 : tbl, multiplier: f+1,
+        hp:2, maxHp:2,
+      });
+    }
+    // ── Mini-enemigos patrullando el piso de la cueva ──
+    const groundMiniCount = Math.min(3, 1 + Math.floor(caveSpan/350));
+    for(let g=0; g<groundMiniCount; g++){
+      const gx = caveInnerStart + (caveSpan/(groundMiniCount+1))*(g+1) + 20;
+      const gty = terrainYAt(gx + 16);
+      G.enemies.push({
+        x:gx, y:gty-38, w:32, h:38,
+        startX:gx, range: Math.min(70, caveSpan/(groundMiniCount*3)), dir:1,
+        speed: eStyle.speed * 0.85,
+        dead:false, deadTimer:0, frame:0, ft:0, frozen:false,
+        table: pl.isFinal ? 0 : tbl, multiplier: 10+g,
+        hp:3, maxHp:3,
+        monsterStyle: eStyle.type,
+        floats: eStyle.floats || false,
+        isCaveMini:true,
+      });
+    }
   } else {
     G.boss = null;
     G.bossChest = null;
     G.pipe = null;
+    G.giantRock = null;
+    G.exitPipe = null;
+    G.caveBranchPlatforms = [];
   }
   G.inBossCave = false;
   G.lightPortal = null;
@@ -9027,6 +9329,21 @@ const CHEST_PRIZES = [
 ];
 
 // Genera 5 preguntas para el cofre según nivel del planeta y multiplicador del guardián
+// ── Reparte multiplicadores para preguntas de cofres: agota 1..10 antes de repetir ──
+function drawChestMultiplier(){
+  if(!G.chestMultBag || G.chestMultBag.length===0){
+    let bag = shuffleArr([1,2,3,4,5,6,7,8,9,10]);
+    if(G._lastChestMult!=null && bag[0]===G._lastChestMult && bag.length>1){
+      const j = 1+Math.floor(Math.random()*(bag.length-1));
+      [bag[0],bag[j]]=[bag[j],bag[0]];
+    }
+    G.chestMultBag = bag;
+  }
+  const m = G.chestMultBag.shift();
+  G._lastChestMult = m;
+  return m;
+}
+
 function generateChestQuestions(planet, guardianMult){
   const pl = PLANETS[planet];
   // Moon chests: show 5 questions focused on the exact multiplier (the card they'll receive)
@@ -9039,29 +9356,15 @@ function generateChestQuestions(planet, guardianMult){
     }
     return questions;
   }
-  // Final planet: random questions from ALL tables (2–12)
+  // Final planet: random questions from ALL tables (2–12), sin repetir multiplicador hasta agotar la tabla
   if(pl.isFinal){
-    const questions = [];
-    for(let i=0;i<5;i++){
-      const t = 2 + Math.floor(Math.random()*11);
-      const m = 1 + Math.floor(Math.random()*10);
-      questions.push({ a: t, b: m, answer: t*m });
-    }
-    return questions;
+    const t = 2 + Math.floor(Math.random()*11);
+    const m = drawChestMultiplier();
+    return [{ a: t, b: m, answer: t*m }];
   }
   const table = pl.table;
-  const questions = [];
-  if(guardianMult <= 5){
-    for(let i=0;i<5;i++){
-      const m=((guardianMult-1+i)%10)+1;
-      questions.push({a:table,b:m,answer:table*m});
-    }
-  } else {
-    const pool=[1,2,3,4,5,6,7,8,9,10];
-    shuffleArr(pool);
-    for(let i=0;i<5;i++) questions.push({a:table,b:pool[i],answer:table*pool[i]});
-  }
-  return questions;
+  const m = drawChestMultiplier();
+  return [{ a: table, b: m, answer: table*m }];
 }
 
 function generateOptions(correct, tableStep){
@@ -9125,6 +9428,7 @@ function openChestChallenge(chest){
 
   // ── NORMAL PLANET CHESTS: quiz challenge ─────────────────
   G.state='chestchallenge';
+  { const tw=document.getElementById('chestTimerWrap'); if(tw) tw.style.display='none'; }
 
   const planet = G.planet;
   const prize = CHEST_PRIZES[Math.min(planet, CHEST_PRIZES.length-1)];
@@ -9147,11 +9451,12 @@ function openChestChallenge(chest){
   const rw = document.getElementById('chestRewards');
   rw.innerHTML = prize.rewards.map(r=>`<div class="creward">${r}</div>`).join('');
 
-  renderChestQuestion();
   document.getElementById('chestModal').style.display='flex';
+  startBossCountdown(()=>{ renderChestQuestion(); });
 }
 
-let _chestQType = 2; // 1=Teclado, 2=Match, 3=Deslizador, 4=Verdadero/Falso, 5=Adivina el Patrón
+let _chestQType = 2; // 1=Teclado, 2=Match, 3=Deslizador, 4=Verdadero/Falso, 5=Adivina el Patrón, 6=Arrastra
+let _prevChestQType = null; // para evitar repetir el mismo tipo dos veces seguidas
 
 function renderChestQuestion(){
   const dc = G.chestChallenge;
@@ -9166,23 +9471,26 @@ function renderChestQuestion(){
 
   document.getElementById('chestQNum').textContent = `Pregunta 1 de 1`;
 
-  // Elegir tipo de pregunta al azar
-  const _chestTypes=[1,2,3,4,5];
-  _chestQType = _chestTypes[Math.floor(Math.random()*_chestTypes.length)];
+  // Elegir tipo de pregunta al azar, evitando repetir el mismo tipo dos veces seguidas
+  const _chestTypes=[1,2,3,4,5,6,7];
+  let _typePool = _chestTypes.filter(t=>t!==_prevChestQType);
+  if(_typePool.length===0) _typePool = _chestTypes;
+  _chestQType = _typePool[Math.floor(Math.random()*_typePool.length)];
+  _prevChestQType = _chestQType;
 
   const cbox = document.querySelector('.cbox');
-  cbox.classList.remove('qtype-keyboard','qtype-match','qtype-slider','qtype-multiple','qtype-truefalse','qtype-pattern');
+  cbox.classList.remove('qtype-keyboard','qtype-match','qtype-slider','qtype-multiple','qtype-truefalse','qtype-pattern','qtype-drag');
 
   const qtEl = document.getElementById('chestQText');
   const optsEl = document.getElementById('chestQOpts');
-  qtEl.textContent=''; optsEl.innerHTML='';
+  qtEl.textContent=''; optsEl.innerHTML=''; optsEl.classList.remove('circle4');
   document.getElementById('chestResult').textContent='';
 
   const badge = document.getElementById('chestTypeBadge');
   const handleResult=(ok, btn, wrongCorrectAns)=>{
     if(dc.animating) return;
     dc.animating = true;
-    document.querySelectorAll('.cq-opt,.tf-opt,.pattern-opt,.nk,.mi,.sl-confirm').forEach(b=>b.style.pointerEvents='none');
+    document.querySelectorAll('.cq-opt,.tf-opt,.pattern-opt,.nk,.mi,.sl-confirm,.drag-chip').forEach(b=>b.style.pointerEvents='none');
     if(ok){
       if(progBar){ progBar.style.width='100%'; }
       answerChest(ok, btn, null);
@@ -9211,6 +9519,16 @@ function renderChestQuestion(){
     cbox.classList.add('qtype-pattern');
     if(badge){ badge.textContent='🔍 Adivina el Patrón'; badge.style.color='#26c6da'; badge.style.background='#26c6da18'; badge.style.boxShadow='0 0 12px #26c6da55'; }
     renderQPattern(qtEl, optsEl, q.a, q.b, q.answer, handleResult);
+  } else if(_chestQType===6){
+    // ── ARRASTRAR ──
+    cbox.classList.add('qtype-drag');
+    if(badge){ badge.textContent='🖐️ Arrastra'; badge.style.color='#ffb300'; badge.style.background='#ffb30018'; badge.style.boxShadow='0 0 12px #ffb30055'; }
+    renderQDrag(qtEl, optsEl, q.a, q.b, q.answer, handleResult);
+  } else if(_chestQType===7){
+    // ── OPCIÓN MÚLTIPLE ──
+    cbox.classList.add('qtype-multiple');
+    if(badge){ badge.textContent='🎯 Opción Múltiple'; badge.style.color='#f06292'; badge.style.background='#f0629218'; badge.style.boxShadow='0 0 12px #f0629255'; }
+    renderQMultiple(qtEl, optsEl, q.a, q.b, q.answer, handleResult);
   } else {
     // ── MATCH (unir pares) ──
     cbox.classList.add('qtype-match');
@@ -9263,8 +9581,7 @@ function finishChestChallenge(){
 
     // Monedas: escalan con planeta
     const coinsEarned = 10 + planet*3 + 25 + 20; // bonus perfecto siempre
-    G.coins += coinsEarned;
-    localStorage.setItem(profileKey('coins'), G.coins);
+    grantCoins(coinsEarned);
 
     // Puntos
     G.score += basePoints;
@@ -9272,14 +9589,6 @@ function finishChestChallenge(){
     // Energía
     const energyGain = perfectBonus ? G.maxEnergy : goodBonus ? 60 : 30;
     G.energy = Math.min(G.maxEnergy, G.energy + energyGain);
-
-    // Vida extra: planetas especiales O perfecto en cualquier planeta
-    let lifeGained = false;
-    const lifeplanets = planet===3||planet===6||planet===8||planet===10||planet===12;
-    if((lifeplanets || perfectBonus) && G.doorLives<3){
-      G.doorLives = Math.min(3, G.doorLives+1);
-      lifeGained = true;
-    }
 
     sfx('win');
     if(dc.chest){ dc.chest.opened=true; dc.chest.challenged=false; }
@@ -9289,8 +9598,6 @@ function finishChestChallenge(){
     rewardsList.push({ icon:'⭐', label:`+${basePoints} Puntos`,       color:'#f0c040' });
     rewardsList.push({ icon:'💰', label:`+${coinsEarned} Monedas`,     color:'#ffd700' });
     rewardsList.push({ icon:'⚡', label:`+${energyGain} Energía`,      color:'#00eeff' });
-    if(lifeGained)
-      rewardsList.push({ icon:'❤️', label:'+1 Vida extra',              color:'#ff4488' });
     if(perfectBonus)
       rewardsList.push({ icon:'🌟', label:'¡Bonus perfecto! 5/5',       color:'#ffffff' });
 
@@ -9919,9 +10226,16 @@ function triggerPipeCinematic(){
     else {
       cinDiv.style.display='none';
       G.inBossCave=true;
+      // El jugador reaparece justo detrás/al lado de la roca gigante, como si el tubo
+      // hubiese rodeado por debajo de ella y saliera del otro lado.
+      if(G.exitPipe){
+        P.x = G.exitPipe.x + G.exitPipe.w + 14;
+        P.y = terrainYAt(P.x + P.w/2) - P.h;
+      }
+      P.vx = 0; P.vy = 0;
       G.state='playing';
-      speak('Entraste a la cueva del jefe. ¡Cuidado!');
-      floatText('👑 ¡La cueva del jefe! Cuidado...', W/2-140, H*0.3, '#ff8844');
+      speak('Entraste a la cueva del jefe. ¡Cuidado! Hay caminos sin salida.');
+      floatText('👑 ¡La cueva del jefe! Ten cuidado...', W/2-140, H*0.3, '#ff8844');
     }
   }
   pipeLoop();
@@ -10665,16 +10979,37 @@ function update(){
     }
   }
 
-  // Tubo: pared sólida que bloquea el paso hasta disparar la cinemática de entrada a la cueva
-  if(G.state==='playing' && G.pipe && !G.pipe.entered){
+  // Tubo: se sube encima como una plataforma; parado ahí arriba hay que presionar ABAJO para bajar a la cueva
+  if(G.state==='playing' && G.pipe && !G.pipe.entered && !G.inBossCave){
     const pp=G.pipe;
-    if(P.x+P.w>pp.x&&P.x<pp.x+pp.w&&P.y+P.h>0&&P.y<pp.groundY){
+    const onPipeTop = P.x+P.w>pp.x&&P.x<pp.x+pp.w&&P.y+P.h>=pp.y&&P.y+P.h<=pp.y+18&&P.vy>=0;
+    if(onPipeTop){
+      P.y=pp.y-P.h; P.vy=0; P.onGround=true; P.jumpsLeft=2; P.onPipeTop=true;
+      if(!pp._hinted){
+        pp._hinted=true;
+        floatText('⬇️ ¡Presiona ABAJO para bajar!', pp.x-G.cameraX-30, pp.y-40, '#f0c040');
+      }
+    } else {
+      P.onPipeTop=false;
+    }
+    // Pared sólida solo en el cuerpo del tubo (debajo del borde superior), para no bloquear el salto hacia la parte de encima
+    if(P.x+P.w>pp.x&&P.x<pp.x+pp.w&&P.y+P.h>pp.y+10&&P.y<pp.groundY){
       if(P.vx>0&&P.x+P.w/2<pp.x+pp.w/2){P.x=pp.x-P.w;P.vx=0;}
       else if(P.vx<0&&P.x+P.w/2>pp.x+pp.w/2){P.x=pp.x+pp.w;P.vx=0;}
-      if(!pp.challenged){
-        pp.challenged=true;
-        setTimeout(()=>triggerPipeCinematic(),120);
-      }
+    }
+    // Parado encima del tubo + presiona ABAJO → entra a la cueva
+    if(P.onPipeTop && keys.down && !pp.challenged){
+      pp.challenged=true;
+      triggerPipeCinematic();
+    }
+  }
+
+  // Roca gigante: pared sólida infranqueable (antes de este cambio no tenía colisión y se podía atravesar)
+  if(G.state==='playing' && G.giantRock){
+    const gr=G.giantRock;
+    if(P.x+P.w>gr.x&&P.x<gr.x+gr.w){
+      if(P.vx>0&&P.x+P.w/2<gr.x+gr.w/2){P.x=gr.x-P.w;P.vx=0;}
+      else if(P.vx<0&&P.x+P.w/2>gr.x+gr.w/2){P.x=gr.x+gr.w;P.vx=0;}
     }
   }
 
@@ -10757,10 +11092,9 @@ function update(){
     if(P.x+P.w > tr.x && P.x < tr.x+tr.w && P.y+P.h > tr.y && P.y < tr.y+tr.h){
       tr.collected = true;
       const coins = Math.floor(tr.value * 0.5);
-      G.score += tr.value; G.coins += coins;
-      localStorage.setItem(profileKey('coins'), G.coins);
+      G.score += tr.value; grantCoins(coins);
       updateHUD(); sfx('win');
-      const icons = {gem:'💎', artifact:'🏺', rune:'🔮'};
+      const icons = {gem:'🪙', artifact:'🏺', rune:'🔮'};
       floatText(`${icons[tr.type]||'💎'} +${tr.value}⭐ +${coins}💰`, P.x-G.cameraX, P.y-40, '#f0c040');
       burst(tr.x - G.cameraX + tr.w/2, tr.y + tr.h/2, '#f0c040');
     }
@@ -10771,8 +11105,20 @@ function update(){
     if(c.collected)return;
     if(P.x+P.w>c.x&&P.x<c.x+c.w&&P.y+P.h>c.y&&P.y<c.y+c.h){
       c.collected=true;
-      G.score+=5; updateHUD(); sfx('bulb');
-      floatText('🍭 +5⭐',P.x-G.cameraX,P.y-30,'#ff88cc');
+      G.score+=5;
+      G.energy=Math.min(G.maxEnergy, G.energy+8);
+      updateHUD(); sfx('bulb');
+      floatText('🍭 +5⭐ +8⚡',P.x-G.cameraX,P.y-30,'#ff88cc');
+    }
+  });
+
+  // Monedas regadas por el nivel (estilo Sonic)
+  if(G.scatterCoins) G.scatterCoins.forEach(sc=>{
+    if(sc.collected) return;
+    if(P.x+P.w>sc.x&&P.x<sc.x+sc.w&&P.y+P.h>sc.y&&P.y<sc.y+sc.h){
+      sc.collected=true;
+      grantCoins(1);
+      updateHUD(); sfx('bulb');
     }
   });
 
@@ -11051,6 +11397,7 @@ function draw(){
     ctx.translate(fx,fy);ctx.scale(G.zoom,G.zoom);ctx.translate(-fx,-fy);
   }
 
+  if(!G.inBossCave){
   const sk=ctx.createLinearGradient(0,0,0,H);
   sk.addColorStop(0,pl.sky[0]);sk.addColorStop(1,pl.sky[1]);
   ctx.fillStyle=sk;ctx.fillRect(-200,-200,W/G.zoom+400,H/G.zoom+400);
@@ -11124,11 +11471,6 @@ function draw(){
             ctx.closePath(); ctx.fill();
           }
           ctx.globalAlpha = 1;
-          // Texto "CUEVA"
-          ctx.globalAlpha = 0.4+0.2*Math.sin(t3d*2);
-          ctx.fillStyle = '#a0d8ff'; ctx.font = 'bold 10px Nunito'; ctx.textAlign='center';
-          ctx.fillText('🔦 CUEVA OCULTA', cx2+cave.w/2, cave.y-8);
-          ctx.textAlign='left'; ctx.globalAlpha=1;
         });
       }
       else if(layer.type === 'rivers'){
@@ -11171,6 +11513,9 @@ function draw(){
         });
       }
     });
+  }
+  } else {
+    drawCaveBackground(gY);
   }
 
   if(G.terrain&&G.terrain.length){
@@ -11347,26 +11692,25 @@ function draw(){
       ctx.font='22px serif'; ctx.textAlign='center';
       ctx.fillText('🔮', tx+tr.w/2, tr.y+bob+tr.h*0.9);
     } else {
-      ctx.shadowColor='#00eeff';
-      // Diamante geométrico
+      ctx.shadowColor='#ffd700';
+      // Moneda dorada (antes era un diamante)
       const dcx = tx+tr.w/2, dcy = tr.y+bob+tr.h/2;
-      const gemGrad = ctx.createLinearGradient(dcx-10, dcy-12, dcx+10, dcy+12);
-      gemGrad.addColorStop(0,'#aaeeff'); gemGrad.addColorStop(0.4,'#0088ff'); gemGrad.addColorStop(1,'#004488');
-      ctx.fillStyle = gemGrad;
+      const coinGrad = ctx.createRadialGradient(dcx-3, dcy-3, 1, dcx, dcy, 11);
+      coinGrad.addColorStop(0,'#fff6c8'); coinGrad.addColorStop(0.5,'#ffd700'); coinGrad.addColorStop(1,'#b8860b');
+      ctx.fillStyle = coinGrad;
       ctx.beginPath();
-      ctx.moveTo(dcx, dcy-12); ctx.lineTo(dcx+9, dcy-2);
-      ctx.lineTo(dcx, dcy+12); ctx.lineTo(dcx-9, dcy-2);
-      ctx.closePath(); ctx.fill();
-      ctx.strokeStyle='#88ddff'; ctx.lineWidth=1.5;
-      ctx.beginPath();
-      ctx.moveTo(dcx, dcy-12); ctx.lineTo(dcx+9, dcy-2);
-      ctx.lineTo(dcx, dcy+12); ctx.lineTo(dcx-9, dcy-2);
-      ctx.closePath(); ctx.stroke();
+      ctx.arc(dcx, dcy, 11, 0, Math.PI*2);
+      ctx.fill();
+      ctx.strokeStyle='#8a6300'; ctx.lineWidth=1.5;
+      ctx.stroke();
+      ctx.fillStyle='#8a6300';
+      ctx.font="bold 11px 'Fredoka One'"; ctx.textAlign='center';
+      ctx.fillText('$', dcx, dcy+4);
     }
     // Aura pulsante
     const aura = 0.2+0.15*Math.sin(tNow*0.01+tr.x*0.02);
     ctx.globalAlpha=aura;
-    ctx.fillStyle = tr.type==='artifact' ? '#ff8800' : tr.type==='rune' ? '#cc44ff' : '#00eeff';
+    ctx.fillStyle = tr.type==='artifact' ? '#ff8800' : tr.type==='rune' ? '#cc44ff' : '#ffd700';
     ctx.beginPath(); ctx.arc(tx+tr.w/2, tr.y+bob+tr.h/2, 16, 0, Math.PI*2); ctx.fill();
     ctx.globalAlpha=1; ctx.shadowBlur=0; ctx.textAlign='left';
     ctx.restore();
@@ -11435,6 +11779,27 @@ function draw(){
     ctx.shadowBlur=0;ctx.textAlign='left';
   });
 
+  // Monedas regadas por el nivel, estilo anillos de Sonic
+  if(G.scatterCoins){
+    const spin = Math.abs(Math.sin(Date.now()*0.004));
+    G.scatterCoins.forEach(sc=>{
+      if(sc.collected) return;
+      const scx=sc.x-G.cameraX;
+      if(scx<-40||scx>W+40) return;
+      ctx.save();
+      ctx.shadowBlur=10; ctx.shadowColor='#ffd700';
+      ctx.translate(scx+sc.w/2, sc.y+sc.h/2);
+      ctx.scale(Math.max(0.25,spin),1);
+      const coinGrad=ctx.createRadialGradient(-2,-2,1,0,0,9);
+      coinGrad.addColorStop(0,'#fff6c8'); coinGrad.addColorStop(0.5,'#ffd700'); coinGrad.addColorStop(1,'#b8860b');
+      ctx.fillStyle=coinGrad;
+      ctx.beginPath(); ctx.arc(0,0,9,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='#8a6300'; ctx.lineWidth=1.2; ctx.stroke();
+      ctx.restore();
+    });
+    ctx.shadowBlur=0;
+  }
+
   // Platform enemies (small, Mario style)
   G.platEnemies.forEach(e=>{
     const ex=e.x-G.cameraX;
@@ -11489,13 +11854,22 @@ function draw(){
     });
   }
 
-  // Tubo de entrada a la cueva del jefe
-  if(G.pipe && !G.pipe.entered){
+  // Tubo de entrada a la cueva del jefe (solo visible en la superficie, antes de entrar)
+  if(G.pipe && !G.inBossCave){
     drawPipe(G.pipe.x - G.cameraX, G.pipe);
   }
+  // Roca gigante: en superficie tapa toda la vista más allá del tubo; dentro de la
+  // cueva queda detrás del tubo de salida, como si la tubería la rodeara por debajo.
+  if(G.giantRock){
+    drawGiantRock(G.giantRock.x - G.cameraX, G.giantRock, G.inBossCave);
+  }
+  // Tubo de salida dentro de la cueva del jefe (aparece delante de la roca gigante)
+  if(G.inBossCave && G.exitPipe){
+    drawExitPipeStub(G.exitPipe.x - G.cameraX, G.exitPipe);
+  }
 
-  // Flag
-  if(G.flag){
+  // Flag (si el nivel tiene tubo hacia el jefe, la bandera no se ve hasta entrar a la cueva)
+  if(G.flag && (!G.pipe || G.inBossCave)){
     const fx=G.flag.x-G.cameraX;
     ctx.strokeStyle='#bbb';ctx.lineWidth=3;
     ctx.beginPath();ctx.moveTo(fx,gY);ctx.lineTo(fx,G.flag.y);ctx.stroke();
@@ -11551,14 +11925,14 @@ function draw(){
     }
   });
 
-  // Draw BOSS
-  if(G.boss){
+  // Draw BOSS (solo visible dentro de la cueva del jefe, en otro escenario)
+  if(G.boss && G.inBossCave){
     const bs=G.boss;
     const bsx=bs.x-G.cameraX;
     if(bsx>-120&&bsx<W+120) drawBoss(bsx, bs);
   }
-  // Draw boss chest
-  if(G.bossChest && G.bossChest.visible){
+  // Draw boss chest (solo dentro de la cueva)
+  if(G.bossChest && G.bossChest.visible && G.inBossCave){
     drawBossChest(G.bossChest.x-G.cameraX, G.bossChest);
   }
   // Draw portal de luz (salida de la cueva)
@@ -11951,6 +12325,58 @@ function drawPipe(sx, pipe){
   ctx.textAlign='left';
 }
 
+// ─── Dibujar roca gigante que tapa la vista tras el tubo / decora la cueva ──
+function drawGiantRock(sx, rock, inCave){
+  const rw = rock.w, gy = rock.groundY;
+  if(sx+rw<-100||sx>W+200) return;
+  const topY = -120; // sube fuera de la pantalla para tapar todo por arriba
+  ctx.save();
+  const grad=ctx.createLinearGradient(sx,topY,sx+rw,gy);
+  if(inCave){
+    grad.addColorStop(0,'#2a1030'); grad.addColorStop(0.5,'#180a20'); grad.addColorStop(1,'#0c0510');
+  } else {
+    grad.addColorStop(0,'#5a5048'); grad.addColorStop(0.5,'#403830'); grad.addColorStop(1,'#241f1a');
+  }
+  ctx.fillStyle=grad;
+  ctx.beginPath();
+  ctx.moveTo(sx, gy);
+  ctx.lineTo(sx-10, topY);
+  ctx.lineTo(sx+rw*0.3, topY-20);
+  ctx.lineTo(sx+rw*0.55, topY+10);
+  ctx.lineTo(sx+rw*0.8, topY-14);
+  ctx.lineTo(sx+rw+10, topY);
+  ctx.lineTo(sx+rw, gy);
+  ctx.closePath();
+  ctx.fill();
+  // Grietas
+  ctx.strokeStyle = inCave ? 'rgba(255,120,60,0.35)' : 'rgba(0,0,0,0.35)';
+  ctx.lineWidth=3;
+  ctx.beginPath();
+  ctx.moveTo(sx+rw*0.25, topY+40); ctx.lineTo(sx+rw*0.35, gy*0.6);
+  ctx.moveTo(sx+rw*0.7, topY+30); ctx.lineTo(sx+rw*0.6, gy*0.55);
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ─── Dibujar tubo de salida dentro de la cueva (sin flecha de invitación) ──
+function drawExitPipeStub(sx, pipe){
+  if(sx<-100||sx>W+100) return;
+  const w=pipe.w, h=pipe.h;
+  const bodyY=pipe.groundY-h+30;
+  const grad=ctx.createLinearGradient(sx,0,sx+w,0);
+  grad.addColorStop(0,'#0d5c1a'); grad.addColorStop(0.5,'#2fa83f'); grad.addColorStop(1,'#0d5c1a');
+  ctx.fillStyle=grad;
+  ctx.fillRect(sx, bodyY, w, pipe.groundY-bodyY);
+  ctx.strokeStyle='#063a0d'; ctx.lineWidth=3;
+  ctx.strokeRect(sx, bodyY, w, pipe.groundY-bodyY);
+  const capW=w+14, capX=sx-7, capH=22;
+  const gradCap=ctx.createLinearGradient(capX,0,capX+capW,0);
+  gradCap.addColorStop(0,'#0d5c1a'); gradCap.addColorStop(0.5,'#3fcf50'); gradCap.addColorStop(1,'#0d5c1a');
+  ctx.fillStyle=gradCap;
+  ctx.fillRect(capX, bodyY-capH, capW, capH);
+  ctx.strokeRect(capX, bodyY-capH, capW, capH);
+}
+
 // ─── Dibujar portal de luz (salida de la cueva) ──
 function drawLightPortal(sx, portal){
   if(sx<-100||sx>W+100) return;
@@ -11974,21 +12400,200 @@ function drawLightPortal(sx, portal){
   ctx.textAlign='left';
 }
 
+// ─── Fondo sólido de cueva: reemplaza cielo/espacio cuando G.inBossCave ──
+function drawCaveBackground(gY){
+  const bgGrad = ctx.createLinearGradient(0,0,0,H);
+  bgGrad.addColorStop(0,'#0b0710');
+  bgGrad.addColorStop(0.55,'#170d1e');
+  bgGrad.addColorStop(1,'#271531');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(-200,-200,W/G.zoom+400,H/G.zoom+400);
+
+  const t3d = Date.now()*0.0006;
+  const scrolled1 = G.cameraX*0.15, scrolled2 = G.cameraX*0.35;
+
+  ctx.globalAlpha=0.5;
+  ctx.fillStyle='#1c1220';
+  ctx.beginPath(); ctx.moveTo(-200,gY);
+  for(let x=-200;x<W+220;x+=40){
+    const wx=x+scrolled1;
+    const y=gY-70-30*Math.abs(Math.sin(wx*0.006+t3d));
+    ctx.lineTo(x,y);
+  }
+  ctx.lineTo(W+200,gY); ctx.closePath(); ctx.fill();
+
+  ctx.globalAlpha=0.65;
+  ctx.fillStyle='#2a1a2e';
+  ctx.beginPath(); ctx.moveTo(-200,gY);
+  for(let x=-200;x<W+220;x+=34){
+    const wx=x+scrolled2;
+    const y=gY-40-22*Math.abs(Math.sin(wx*0.009+t3d*1.4+2));
+    ctx.lineTo(x,y);
+  }
+  ctx.lineTo(W+200,gY); ctx.closePath(); ctx.fill();
+  ctx.globalAlpha=1;
+
+  for(let i=0;i<7;i++){
+    const cx4=((i*211+(G.cameraX*0.2))%(W+120))-60;
+    const cy4=gY-90-((i*67)%140);
+    const glow=0.3+0.25*Math.sin(Date.now()*0.002+i);
+    ctx.globalAlpha=glow;
+    ctx.fillStyle = i%2===0 ? '#8a5cff':'#40c8ff';
+    ctx.beginPath();
+    ctx.moveTo(cx4,cy4-7);ctx.lineTo(cx4+4,cy4);ctx.lineTo(cx4,cy4+7);ctx.lineTo(cx4-4,cy4);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+
+  const vg=ctx.createRadialGradient(W/2,H*0.5,H*0.1,W/2,H*0.5,H*0.9);
+  vg.addColorStop(0,'rgba(255,150,60,0.06)');
+  vg.addColorStop(1,'rgba(0,0,0,0.5)');
+  ctx.fillStyle=vg; ctx.fillRect(-200,-200,W/G.zoom+400,H/G.zoom+400);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LABERINTO DEL JEFE — jugable, distinto en cada planeta/jefe
+// ═══════════════════════════════════════════════════════════
+let _mazeState = null;
+
+function mulberry32(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function generateMazeGrid(cols, rows, rng){
+  // Cada celda guarda qué lados tienen paso abierto (true = sin pared)
+  const cells = Array.from({length: rows}, () =>
+    Array.from({length: cols}, () => ({N:false,S:false,E:false,W:false,visited:false})));
+  const dirs = [['N',0,-1,'S'],['S',0,1,'N'],['E',1,0,'W'],['W',-1,0,'E']];
+  const stack = [[0,0]];
+  cells[0][0].visited = true;
+  while(stack.length){
+    const [x,y] = stack[stack.length-1];
+    const options = dirs.filter(([,dx,dy])=>{
+      const nx=x+dx, ny=y+dy;
+      return nx>=0 && nx<cols && ny>=0 && ny<rows && !cells[ny][nx].visited;
+    });
+    if(!options.length){ stack.pop(); continue; }
+    const [d,dx,dy,opp] = options[Math.floor(rng()*options.length)];
+    const nx=x+dx, ny=y+dy;
+    cells[y][x][d]=true;
+    cells[ny][nx][opp]=true;
+    cells[ny][nx].visited=true;
+    stack.push([nx,ny]);
+  }
+  return cells;
+}
+
+function openBossMaze(onComplete){
+  const planet = G.planet;
+  const size = Math.min(9, 6 + Math.floor(planet/2)); // laberintos más grandes en planetas avanzados
+  const attempt = G.bossMazeAttempt || 0;
+  const rng = mulberry32(planet*7919 + 1337 + attempt*104729);
+  const grid = generateMazeGrid(size, size, rng);
+
+  _mazeState = {
+    grid, cols:size, rows:size,
+    px:0, py:0,
+    goalX: size-1, goalY: size-1,
+    moves:0,
+    onComplete,
+  };
+
+  document.getElementById('bossMazeModal').style.display='flex';
+  floatText('🕸️ ¡Laberinto! Encuentra al jefe', W/2-120, H*0.3, '#c090ff');
+  speak('Encuentra el camino hasta el jefe');
+  drawMaze();
+}
+
+function mazeCellSize(){
+  const maxDim = Math.min(window.innerWidth*0.9, window.innerHeight*0.48, 420);
+  return Math.max(20, Math.floor(maxDim / Math.max(_mazeState.cols, _mazeState.rows)));
+}
+
+function drawMaze(){
+  if(!_mazeState) return;
+  const cv = document.getElementById('mazeCanvas');
+  const cell = mazeCellSize();
+  cv.width = _mazeState.cols*cell;
+  cv.height = _mazeState.rows*cell;
+  const c = cv.getContext('2d');
+  c.clearRect(0,0,cv.width,cv.height);
+  c.fillStyle='#0a0612'; c.fillRect(0,0,cv.width,cv.height);
+
+  c.strokeStyle='#39ff9c'; c.lineWidth=3; c.lineCap='round';
+  c.shadowBlur=6; c.shadowColor='#39ff9c';
+  for(let y=0;y<_mazeState.rows;y++){
+    for(let x=0;x<_mazeState.cols;x++){
+      const cellData=_mazeState.grid[y][x];
+      const px=x*cell, py=y*cell;
+      c.beginPath();
+      if(!cellData.N){ c.moveTo(px,py); c.lineTo(px+cell,py); }
+      if(!cellData.W){ c.moveTo(px,py); c.lineTo(px,py+cell); }
+      if(x===_mazeState.cols-1 && !cellData.E){ c.moveTo(px+cell,py); c.lineTo(px+cell,py+cell); }
+      if(y===_mazeState.rows-1 && !cellData.S){ c.moveTo(px,py+cell); c.lineTo(px+cell,py+cell); }
+      c.stroke();
+    }
+  }
+  c.shadowBlur=0;
+
+  c.textAlign='center'; c.textBaseline='middle';
+  c.font=Math.floor(cell*0.6)+'px serif';
+  c.fillText('👹', _mazeState.goalX*cell+cell/2, _mazeState.goalY*cell+cell/2);
+
+  c.font=Math.floor(cell*0.55)+'px serif';
+  c.fillText('🧑‍🚀', _mazeState.px*cell+cell/2, _mazeState.py*cell+cell/2);
+
+  const statsEl = document.getElementById('mazeStats');
+  if(statsEl) statsEl.textContent = `Movimientos: ${_mazeState.moves}`;
+}
+
+function mazeMove(dir){
+  if(!_mazeState) return;
+  const {grid, px, py} = _mazeState;
+  const cellData = grid[py][px];
+  let nx=px, ny=py;
+  if(dir==='N' && cellData.N) ny--;
+  else if(dir==='S' && cellData.S) ny++;
+  else if(dir==='E' && cellData.E) nx++;
+  else if(dir==='W' && cellData.W) nx--;
+  else { sfx('wrong'); return; }
+  _mazeState.px=nx; _mazeState.py=ny; _mazeState.moves++;
+  drawMaze();
+  if(nx===_mazeState.goalX && ny===_mazeState.goalY){
+    sfx('win');
+    floatText('👑 ¡Encontraste al jefe!', W/2-120, H*0.3, '#ff4444');
+    speak('Encontraste al jefe, prepárate');
+    const cb = _mazeState.onComplete;
+    G.bossMazeAttempt = (G.bossMazeAttempt||0)+1;
+    setTimeout(()=>{
+      document.getElementById('bossMazeModal').style.display='none';
+      _mazeState=null;
+      cb && cb();
+    }, 700);
+  }
+}
+
+try{ document.getElementById('mazeUp').addEventListener('click', ()=>mazeMove('N')); }catch(e){}
+try{ document.getElementById('mazeDown').addEventListener('click', ()=>mazeMove('S')); }catch(e){}
+try{ document.getElementById('mazeLeft').addEventListener('click', ()=>mazeMove('W')); }catch(e){}
+try{ document.getElementById('mazeRight').addEventListener('click', ()=>mazeMove('E')); }catch(e){}
+
 // ─── Overlay visual de la cueva del jefe ──
 function drawCaveOverlay(){
-  // Tinte oscuro general para dar sensación de interior
-  ctx.save();
-  ctx.globalAlpha=0.34;
-  ctx.fillStyle='#05030a';
-  ctx.fillRect(0,0,W,H);
-  ctx.restore();
-
-  // Viñeta ambar tenue (iluminación de antorchas)
-  const vg=ctx.createRadialGradient(W/2,H*0.55,H*0.15,W/2,H*0.55,H*0.85);
-  vg.addColorStop(0,'rgba(255,150,60,0.05)');
-  vg.addColorStop(1,'rgba(0,0,0,0.55)');
-  ctx.fillStyle=vg;
-  ctx.fillRect(0,0,W,H);
+  // Brillos de cristales lejanos, propios de la cueva
+  const tc=Date.now()*0.002;
+  for(let i=0;i<5;i++){
+    const cx4=(i*173+40)%(W+80)-40, cy4=H*0.4+((i*97)%(H*0.4));
+    ctx.globalAlpha=0.25+0.2*Math.sin(tc+i);
+    ctx.fillStyle='#8a5cff';
+    ctx.beginPath(); ctx.moveTo(cx4,cy4-8); ctx.lineTo(cx4+4,cy4); ctx.lineTo(cx4,cy4+8); ctx.lineTo(cx4-4,cy4); ctx.closePath(); ctx.fill();
+  }
+  ctx.globalAlpha=1;
 
   // Estalactitas en el techo
   ctx.fillStyle='#1a0f10';
@@ -13003,23 +13608,34 @@ function drawBossChest(sx, chest){
 }
 
 // ═══════════════════════════════════════════════════════════
-//  COFRE DEL BOSS — 20 PREGUNTAS (10 ordenadas + 10 al azar)
+//  COFRE DEL BOSS — 20 PREGUNTAS DE MULTIPLICACIÓN (10 ordenadas + 10 al azar)
 // ═══════════════════════════════════════════════════════════
+function makeBossQuestion(table, b){
+  return {type:'mult', a:table, b, answer:table*b, text:`${table} × ${b} = ?`, speech:`${table} por ${b}`, step:Math.max(1,table)};
+}
+
 function generateBossChestQuestions(table){
-  // isFinal planet: random from ALL tables
+  // Planeta final (table===0): cada pregunta usa una tabla base aleatoria distinta
   if(table === 0){
-    const all = [];
+    const list = [];
     for(let i=0;i<20;i++){
       const t = 2 + Math.floor(Math.random()*11);
       const m = 1 + Math.floor(Math.random()*10);
-      all.push({a:t,b:m,answer:t*m,phase: i<10?'order':'random'});
+      const q = makeBossQuestion(t, m);
+      q.phase = i<10 ? 'order' : 'random';
+      list.push(q);
     }
-    return all;
+    return list;
   }
-  // Fase 1: 10 preguntas en orden (×1 al ×10)
-  const ordered = [1,2,3,4,5,6,7,8,9,10].map(m=>({a:table,b:m,answer:table*m,phase:'order'}));
-  // Fase 2: 10 preguntas al azar (shuffle)
-  const random = shuffleArr([1,2,3,4,5,6,7,8,9,10].map(m=>({a:table,b:m,answer:table*m,phase:'random'})));
+  // Fase 1: en orden (×1 al ×10)
+  const ordered = [1,2,3,4,5,6,7,8,9,10].map(m=>{ const q=makeBossQuestion(table,m); q.phase='order'; return q; });
+  // Fase 2: al azar (shuffle), evitando que el ×10 quede pegado justo antes del primero de la fase azar
+  let randomOrder = shuffleArr([1,2,3,4,5,6,7,8,9,10]);
+  if(randomOrder[0]===10){
+    const j = 1 + Math.floor(Math.random()*(randomOrder.length-1));
+    [randomOrder[0], randomOrder[j]] = [randomOrder[j], randomOrder[0]];
+  }
+  const random = randomOrder.map(m=>{ const q=makeBossQuestion(table,m); q.phase='random'; return q; });
   return [...ordered, ...random];
 }
 
@@ -13039,7 +13655,11 @@ function openBossChestChallenge(chest){
     results:[],
     animating:false,
     phase:'order', // 'order' first 10, 'random' last 10
+    timerInterval:null,
+    timerToken:0,
   };
+
+  { const tw=document.getElementById('chestTimerWrap'); if(tw) tw.style.display='none'; }
 
   // Reuse chest modal with boss styling
   document.getElementById('chestIcon').textContent='👑';
@@ -13053,8 +13673,59 @@ function openBossChestChallenge(chest){
     '<div class="creward">⚡ Energía llena</div>',
   ].join('');
 
-  renderBossChestQuestion();
   document.getElementById('chestModal').style.display='flex';
+  startBossCountdown(()=>{ renderBossChestQuestion(); });
+}
+
+// ── Cinemática "¿Estás listo o lista?" + botón Let's go + voz "¡Vamos!" + conteo hablado 5-4-3-2-1 + bocina ──
+function speakOrWait(text, onEnd, minMs){
+  const t0 = Date.now();
+  speak(text, 1, 1, ()=>{
+    const elapsed = Date.now()-t0;
+    setTimeout(onEnd, Math.max(0,(minMs||0)-elapsed));
+  });
+}
+
+function startBossCountdown(onDone){
+  const overlay=document.getElementById('chestCountdownOverlay');
+  const askWrap=document.getElementById('chestCountdownAsk');
+  const goBtn=document.getElementById('chestCountdownGoBtn');
+  const numEl=document.getElementById('chestCountdownNum');
+  if(!overlay || !numEl || !askWrap || !goBtn){ onDone && onDone(); return; }
+
+  overlay.style.display='flex';
+  askWrap.style.display='flex';
+  numEl.style.display='none';
+  speak('¿Estás listo o lista?');
+
+  const runCount=(n)=>{
+    if(n<=0){
+      overlay.style.display='none';
+      numEl.style.display='none';
+      sfx('airhorn');
+      onDone && onDone();
+      return;
+    }
+    numEl.style.display='block';
+    numEl.textContent=n;
+    speakOrWait(`${n}`, ()=>runCount(n-1), 550);
+  };
+
+  const startCount=()=>{
+    askWrap.style.display='none';
+    numEl.style.display='block';
+    numEl.textContent='¡Vamos!';
+    speakOrWait('¡Vamos!', ()=>runCount(5), 500);
+  };
+
+  const goHandler=(ev)=>{
+    ev.preventDefault();
+    goBtn.removeEventListener('touchstart',goHandler);
+    goBtn.onclick=null;
+    startCount();
+  };
+  goBtn.addEventListener('touchstart',goHandler,{passive:false});
+  goBtn.onclick=goHandler;
 }
 
 function renderBossChestQuestion(){
@@ -13082,11 +13753,11 @@ function renderBossChestQuestion(){
   document.getElementById('chestSub').textContent= isOrder
     ? `🔢 Fase 1: En orden (${dc.current+1}/10)`
     : `🔀 Fase 2: Al azar (${dc.current-9}/10)`;
-  document.getElementById('chestQText').textContent=`${q.a} × ${q.b} = ?`;
-  speak(`${q.a} por ${q.b}`);
+  document.getElementById('chestQText').textContent=q.text;
+  speak(q.speech);
 
-  const opts=generateOptions(q.answer,Math.max(1,q.a));
-  const oc=document.getElementById('chestQOpts'); oc.innerHTML='';
+  const opts=generateOptions(q.answer,q.step||1);
+  const oc=document.getElementById('chestQOpts'); oc.innerHTML=''; oc.classList.add('circle4');
   opts.forEach(o=>{
     const btn=document.createElement('div');
     btn.className='cq-opt'; btn.textContent=o;
@@ -13094,6 +13765,7 @@ function renderBossChestQuestion(){
       ev.preventDefault();
       if(dc.animating) return;
       dc.animating=true;
+      clearBossQuestionTimer(dc);
       document.querySelectorAll('.cq-opt').forEach(b=>b.style.pointerEvents='none');
       answerBossChest(o===q.answer,btn,q.answer);
     };
@@ -13104,31 +13776,68 @@ function renderBossChestQuestion(){
   document.getElementById('chestResult').textContent='';
 }
 
+// ─── Cuenta regresiva por pregunta del jefe (12s) ──
+function clearBossQuestionTimer(dc){
+  if(dc && dc.timerInterval){ clearInterval(dc.timerInterval); dc.timerInterval=null; }
+  if(dc) dc.timerToken=(dc.timerToken||0)+1;
+}
+
+function startBossQuestionTimer(dc){
+  clearBossQuestionTimer(dc);
+  const token = dc.timerToken;
+  const SECONDS = 12;
+  const total = SECONDS*1000;
+  let elapsed = 0;
+  const barEl = document.getElementById('chestTimerFill');
+  const numEl = document.getElementById('chestTimerNum');
+  if(barEl){ barEl.style.transition='none'; barEl.style.width='100%'; barEl.style.background='#4ade80'; }
+  if(numEl) numEl.textContent = SECONDS+'s';
+  dc.timerInterval = setInterval(()=>{
+    if(dc.timerToken!==token || G.state!=='bosschest'){ clearInterval(dc.timerInterval); return; }
+    elapsed += 100;
+    const pct = Math.max(0, 100-(elapsed/total)*100);
+    if(barEl){ barEl.style.transition='width 0.1s linear'; barEl.style.width=pct+'%'; barEl.style.background = pct<30?'#ff4444':pct<60?'#f0c040':'#4ade80'; }
+    if(numEl) numEl.textContent = Math.max(0,Math.ceil((total-elapsed)/1000))+'s';
+    if(elapsed>=total){
+      clearInterval(dc.timerInterval);
+      if(dc.animating) return;
+      dc.animating=true;
+      document.querySelectorAll('.cq-opt').forEach(b=>b.style.pointerEvents='none');
+      floatText('⏰ ¡Se acabó el tiempo!', W/2-110, H*0.34, '#ff6666');
+      answerBossChest(false,null,dc.questions[dc.current].answer);
+    }
+  }, 100);
+}
+
+const BOSS_PRAISE = ['¡Excelente!','¡Muy bien!','¡Genial!','¡Perfecto!','¡Así se hace!','¡Increíble!','¡Wow, qué rápido!'];
+
 function answerBossChest(ok,btn,correct){
   const dc=G.bossChestChallenge;
+  clearBossQuestionTimer(dc);
   if(ok){
-    btn.classList.add('ok');
+    if(btn) btn.classList.add('ok');
     dc.results.push('ok');
     sessionStats.correct++;
-    feedbackCorrect(document.getElementById('chestResult'),'✅ ¡CORRECTO! 💥');
+    const praise = BOSS_PRAISE[Math.floor(Math.random()*BOSS_PRAISE.length)];
+    feedbackCorrect(document.getElementById('chestResult'),'✅ '+praise+' 💥');
 
     // Transition message at question 10 (going to random phase)
     if(dc.current===9){
-      speak(`${correct}`, 0.85, 1.2, ()=>{
+      speak(`${praise}. ${correct}`, 0.9, 1.15, ()=>{
         dc.animating=false; dc.current++;
         document.getElementById('chestSub').textContent='🔀 ¡Fase 2! Ahora al azar…';
         floatText('🔀 ¡Fase 2! Al azar…', W/2-90, H*0.35,'#f0c040');
         setTimeout(()=>renderBossChestQuestion(),400);
       });
     } else {
-      speak(`${correct}`, 0.85, 1.2, ()=>{
+      speak(`${praise}. ${correct}`, 0.9, 1.15, ()=>{
         dc.animating=false; dc.current++;
         if(dc.current>=20) finishBossChestChallenge();
         else renderBossChestQuestion();
       });
     }
   } else {
-    btn.classList.add('no');
+    if(btn) btn.classList.add('no');
     document.querySelectorAll('.cq-opt').forEach(b=>{if(+b.textContent===correct)b.classList.add('ok');});
     dc.results.push('no');
     sessionStats.wrong++;
@@ -13141,6 +13850,7 @@ function answerBossChest(ok,btn,correct){
       document.getElementById('chestModal').style.display='none';
       showReviewCard(q2.a,q2.b,()=>{
         // Restart from question 1
+        { const tw=document.getElementById('chestTimerWrap'); if(tw) tw.style.display='none'; }
         dc.current=0; dc.results=[];
         const planet=G.planet;
         const table=PLANETS[planet].table;
@@ -13150,24 +13860,24 @@ function answerBossChest(ok,btn,correct){
         floatText('🔒 ¡Debes acertar las 20 seguidas!',W/2-160,H*0.35,'#ff4444');
         document.getElementById('chestModal').style.display='flex';
         renderBossChestQuestion();
-      });
+      }, q2.type);
     },900);
   }
 }
 
 function finishBossChestChallenge(){
   const dc=G.bossChestChallenge;
+  clearBossQuestionTimer(dc);
   document.getElementById('chestModal').style.display='none';
+  { const tw=document.getElementById('chestTimerWrap'); if(tw) tw.style.display='none'; }
   G.state='playing';
 
   // All 20 correct guaranteed (restart on fail)
   const planet=G.planet;
   const basePoints=300+planet*20;
   const coinsEarned=50+planet*5;
-  G.score+=basePoints; G.coins+=coinsEarned;
-  localStorage.setItem(profileKey('coins'),G.coins);
+  G.score+=basePoints; grantCoins(coinsEarned);
   G.energy=G.maxEnergy;
-  G.doorLives=Math.min(3,G.doorLives+1);
 
   if(dc.chest) dc.chest.opened=true;
   G.bossChestChallenge=null;
@@ -13178,7 +13888,6 @@ function finishBossChestChallenge(){
     {icon:'⭐',label:`+${basePoints} Puntos`,color:'#f0c040'},
     {icon:'💰',label:`+${coinsEarned} Monedas`,color:'#ffd700'},
     {icon:'⚡',label:'Energía al máximo',color:'#00eeff'},
-    {icon:'❤️',label:'+1 Vida',color:'#ff4488'},
     {icon:'👑',label:'¡Jefe derrotado!',color:'#ff0044'},
   ];
 
@@ -13762,6 +14471,23 @@ function loseEnergyLife(reason){
   }
 }
 
+// ── Otorga monedas y da una vida extra cada 100 monedas acumuladas ──
+function grantCoins(amount){
+  if(amount<=0) return;
+  G.coins += amount;
+  localStorage.setItem(profileKey('coins'), G.coins);
+  G.coinsTowardLife = (G.coinsTowardLife||0) + amount;
+  while(G.coinsTowardLife >= 100){
+    G.coinsTowardLife -= 100;
+    if(G.doorLives < 5){
+      G.doorLives = Math.min(5, G.doorLives+1);
+      floatText('❤️ ¡100 monedas! +1 Vida', P.x-G.cameraX, P.y-60, '#ff4488');
+      sfx('win');
+    }
+  }
+  localStorage.setItem(profileKey('coinsTowardLife'), G.coinsTowardLife);
+}
+
 function updateHUD(){
   document.getElementById('hLives').textContent='❤️'.repeat(Math.max(0,G.doorLives));
   const hpLabel = isMoonPlanet(G.planet)
@@ -13948,11 +14674,16 @@ addBtn('bJ',jump,()=>{});
       else if(normX > 0.25) { keys.right=true; keys.left=false;  }
       else                   { keys.left=false; keys.right=false; }
 
+      // Empuje hacia abajo (para bajar por el tubo estando parado encima)
+      const normY = dy / dist;
+      keys.down = normY > 0.6;
+
       // Guardar ángulo de apunte para el disparo
       _aimAngle = angle;
       _joystickActive = true;
     } else {
       keys.left=false; keys.right=false;
+      keys.down=false;
       _aimAngle = null;
       _joystickActive = false;
     }
@@ -13961,6 +14692,7 @@ addBtn('bJ',jump,()=>{});
   function releaseJoystick(){
     joyTouchId = null;
     keys.left=false; keys.right=false;
+    keys.down=false;
     _aimAngle = null;
     _joystickActive = false;
     knob.style.transform = 'translate(-50%, -50%)';
@@ -14458,8 +15190,16 @@ function grenadeExplode(ex, ey){
 }
 
 window.addEventListener('keydown',e=>{
+  if(_mazeState){
+    if(e.key==='ArrowUp'){ e.preventDefault(); mazeMove('N'); }
+    else if(e.key==='ArrowDown'){ e.preventDefault(); mazeMove('S'); }
+    else if(e.key==='ArrowLeft'){ e.preventDefault(); mazeMove('W'); }
+    else if(e.key==='ArrowRight'){ e.preventDefault(); mazeMove('E'); }
+    return;
+  }
   if(e.key==='ArrowLeft'||e.key==='a')keys.left=true;
   if(e.key==='ArrowRight'||e.key==='d')keys.right=true;
+  if(e.key==='ArrowDown'||e.key==='s')keys.down=true;
   if(e.key===' '||e.key==='ArrowUp'){e.preventDefault();jump();}
   if(e.key==='z'||e.key==='Z'||e.key==='x'||e.key==='X') keys.shoot=true;
   if(e.key==='c'||e.key==='C') throwGrenade();
@@ -14467,6 +15207,7 @@ window.addEventListener('keydown',e=>{
 window.addEventListener('keyup',e=>{
   if(e.key==='ArrowLeft'||e.key==='a')keys.left=false;
   if(e.key==='ArrowRight'||e.key==='d')keys.right=false;
+  if(e.key==='ArrowDown'||e.key==='s')keys.down=false;
   if(e.key==='z'||e.key==='Z'||e.key==='x'||e.key==='X') keys.shoot=false;
 });
 
@@ -14660,6 +15401,20 @@ function sfx(t){
         g2.gain.setValueAtTime(0.15,n+0.05);g2.gain.setValueAtTime(0.15,n+0.7);
         g2.gain.exponentialRampToValueAtTime(0.001,n+0.9);
         o2.start(n);o2.stop(n+1.0);}
+        break;
+      case'airhorn':
+        // Bocina de aire cortita: dos armónicos con ataque rápido y sostenido breve
+        o.type='sawtooth';
+        o.frequency.setValueAtTime(370,n);
+        g.gain.setValueAtTime(0,n);
+        g.gain.linearRampToValueAtTime(0.35,n+0.03);
+        g.gain.setValueAtTime(0.35,n+0.26);
+        g.gain.exponentialRampToValueAtTime(0.001,n+0.4);
+        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='square';o2.connect(g2);g2.connect(ac.destination);
+        o2.frequency.setValueAtTime(555,n);
+        g2.gain.setValueAtTime(0,n);g2.gain.linearRampToValueAtTime(0.12,n+0.03);
+        g2.gain.setValueAtTime(0.12,n+0.26);g2.gain.exponentialRampToValueAtTime(0.001,n+0.4);
+        o2.start(n);o2.stop(n+0.45);}
         break;
       case'takeoff':
         // Motor de cohete despegando: rugido que sube de intensidad
