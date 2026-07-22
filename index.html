@@ -3550,8 +3550,12 @@ function adminDeleteProfile(idx){
   const p = profiles[idx];
   if(!confirm(`¿Eliminar a "${p.name}"? Se borrarán todos sus datos guardados en este dispositivo.`)) return;
   const pid = p.id;
-  const keySuffix = ['conquered','coins','cards','owned_avatars','owned_weapons','weapon','certificate','story_seen','owned_flags','flag'];
-  keySuffix.forEach(k => localStorage.removeItem('am_' + pid + '_' + k));
+  const keysToDelete = [];
+  for(let i=0; i<localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && k.includes(pid)) keysToDelete.push(k);
+  }
+  keysToDelete.forEach(k => localStorage.removeItem(k));
   profiles.splice(idx, 1);
   localStorage.setItem('astromath_profiles', JSON.stringify(profiles));
   if(activeProfile >= profiles.length) activeProfile = profiles.length - 1;
@@ -4241,8 +4245,12 @@ document.getElementById('charDeleteBtn').addEventListener('click', ()=>{
 
   // Borrar todas las claves del perfil de localStorage
   const pid = profiles[idx].id;
-  const keySuffix = ['conquered','coins','cards','owned_avatars','owned_weapons','weapon','certificate'];
-  keySuffix.forEach(k => localStorage.removeItem('am_' + pid + '_' + k));
+  const keysToDelete = [];
+  for(let i=0; i<localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && k.includes(pid)) keysToDelete.push(k);
+  }
+  keysToDelete.forEach(k => localStorage.removeItem(k));
 
   // Quitar de la lista
   profiles.splice(idx, 1);
