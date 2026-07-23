@@ -4464,19 +4464,8 @@ function spawnGrenadeBoxes(){
       collected: false,
     });
   });
-  // 1 caja de granadas en plataformas (cada 4ta plataforma)
-  if(G.platforms){
-    G.platforms.forEach((plat, i) => {
-      if(i % 4 === 1){
-        grenadeBoxes.push({
-          x: plat.x + plat.w/2 - 16, y: plat.y - 38,
-          w: 32, h: 32,
-          onPlatform: true,
-          collected: false,
-        });
-      }
-    });
-  }
+  // (Se quitó la caja de granadas extra sobre plataformas: se apilaba con
+  // el dulce/enemigo que cada plataforma ya trae. Las del suelo se conservan.)
 }
 
 function updateGrenadeBoxes(){
@@ -4602,19 +4591,8 @@ function spawnShieldBoxes(){
       collected: false,
     });
   });
-  // 1 caja en cada plataforma flotante par (índice 0,2,4...)
-  if(G.platforms){
-    G.platforms.forEach((plat, i) => {
-      if(i % 3 === 2){ // cada tercera plataforma
-        shieldBoxes.push({
-          x: plat.x + plat.w/2 - 16, y: plat.y - 36,
-          w: 32, h: 32,
-          onPlatform: true,
-          collected: false,
-        });
-      }
-    });
-  }
+  // (Se quitó la caja de escudo extra sobre plataformas: se apilaba con
+  // el dulce/enemigo que cada plataforma ya trae. Las del suelo se conservan.)
 }
 
 function updateShieldBoxes(){
@@ -9062,16 +9040,8 @@ function buildLevel(table){
     type: tbl % 3 === 0 ? 'artifact' : tbl % 3 === 1 ? 'gem' : 'rune',
     value: 20 + tbl * 8,
   }));
-  // Artefactos ocultos adicionales sobre plataformas normales (1 de cada 3)
-  G.platforms.slice(0, layout.platforms.length).forEach((pl, i) => {
-    if(i % 4 === 2){
-      G.treasures.push({
-        x: pl.x + pl.w/2 - 11, y: pl.y - 34,
-        w: 22, h: 22, collected: false,
-        type: 'gem', value: 12 + tbl * 4,
-      });
-    }
-  });
+  // (Se quitaron los artefactos extra sobre plataformas: se apilaban con
+  // el dulce/enemigo que cada plataforma ya trae, dejando varias cosas juntas.)
 
   // ── PUERTAS BLOQUEADAS ────────────────────────────────────────────────
   // (se inicializan después de que G.enemies esté construido)
@@ -10348,13 +10318,18 @@ function updateLavaDeathAnim(){
       _lavaDeathAnim = null;
 
       if(G.doorLives <= 0){
-        // Sin vidas → game over
+        // Sin vidas → ahí sí toca reiniciar el nivel (botón Reintentar)
         G.state = 'gameover';
         showMsg('💀','¡Caíste a la lava!','No te quedan vidas.\nVuelves al mapa estelar.',false);
       } else {
-        // Reiniciar el planeta desde el principio (volver a la nave)
+        // Aún quedan vidas: NO reiniciar el nivel, solo reaparecer
+        // en el último punto seguro antes de la lava.
+        const safeX = (typeof G.lastSafeX==='number') ? G.lastSafeX : P.x;
+        P.x = safeX;
+        P.y = terrainYAt(P.x + P.w/2) - P.h;
+        P.vx = 0; P.vy = 0; P.onGround = true; P.jumpsLeft = 2;
+        P.invincible = 90;
         G.state = 'playing';
-        startLanding(true); // reproduce la animación de llegada y resetea el nivel SIN resetear vidas
       }
     }
     return;
@@ -11034,6 +11009,7 @@ function update(){
   });
   const localGY = terrainYAt(P.x+P.w/2);
   if(P.y+P.h>=localGY && !overPit && P.vy>=0){P.y=localGY-P.h;P.vy=0;P.onGround=true;P.jumpsLeft=2;}
+  if(P.onGround && !overPit) G.lastSafeX = P.x;
   G.platforms.forEach(pl=>{
     if(P.x+P.w>pl.x&&P.x<pl.x+pl.w&&P.y+P.h>=pl.y&&P.y+P.h<=pl.y+18&&P.vy>=0)
       {P.y=pl.y-P.h;P.vy=0;P.onGround=true;P.jumpsLeft=2;}
@@ -11916,8 +11892,9 @@ function draw(){
       ctx.fillStyle='#8040ff'; rr(px,p.y-2,p.w,4,2);
       ctx.globalAlpha=1;
     } else if(p.isLow){
-      ctx.fillStyle='#1a1a2a'; rr(px,p.y,p.w,18,8);
-      ctx.fillStyle='#4466aa'; rr(px+2,p.y,p.w-4,5,3);
+      ctx.strokeStyle='#ffcc66'; ctx.lineWidth=1.5; ctx.strokeRect(px-1,p.y-1,p.w+2,20);
+      ctx.fillStyle='#6a4423'; rr(px,p.y,p.w,18,8);
+      ctx.fillStyle='#ffaa44'; rr(px+2,p.y,p.w-4,5,3);
     } else {
       ctx.fillStyle=pl.ground; rr(px,p.y,p.w,18,8);
       ctx.fillStyle=pl.accent; rr(px+2,p.y,p.w-4,5,3);
@@ -12080,9 +12057,11 @@ function draw(){
     if(rock.broken||rock.type==='lava'||rock.type==='water')return;
     const rx=rock.x-G.cameraX;
     if(rx<-100||rx>W+100)return;
-    // No dibujar si cualquier parte del obstáculo solapa visualmente una lava pit
+    // No dibujar SOLO si de verdad se solapa visualmente con la lava
+    // (antes el margen de 60px ocultaba rocas cercanas que seguían siendo
+    // sólidas, creando un bloqueo invisible antes de llegar a la lava)
     const rockL = rock.x, rockR = rock.x + rock.w;
-    const overLava = lavaObstacles.some(lr=> rockR > lr.x - 60 && rockL < lr.x + lr.w + 60);
+    const overLava = lavaObstacles.some(lr=> rockR > lr.x && rockL < lr.x + lr.w);
     if(overLava) return;
     const shakeX = rock.shakeTimer>0 ? Math.sin(rock.shakeTimer*1.2)*4 : 0;
     drawObstacle(rx+shakeX, rock.y, rock.w, rock.h, rock.type||'rock', rock.shakeTimer>0);
