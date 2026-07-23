@@ -9042,8 +9042,13 @@ function buildLevel(table){
     path.platforms.forEach(p => G.platforms.push(p));
   });
   // Camino BAJO: plataformas bajo el nivel normal cerca de pozos de lava
+  // Solo se colocan si ESTE nivel tiene un pozo de lava cerca de esa X;
+  // antes se agregaban siempre en X fijas aunque el layout no tuviera lava ahí,
+  // dejando una plataforma sólida "fantasma" sin relación con el terreno visible.
   const lowPlatXs = [450, 1100, 1800, 2700, 3500, 4300, 5100];
   lowPlatXs.forEach(lx => {
+    const nearLava = layout.obstacles && layout.obstacles.some(o => o.type==='lava' && Math.abs((o.x + o.w/2) - lx) < 200);
+    if(!nearLava) return;
     const lY = terrainYAt(lx + 30);
     G.platforms.push({x: lx, y: lY - 30, w: 90, isLow: true});
   });
