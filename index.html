@@ -461,20 +461,81 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
   font-family:'Fredoka One';
 }
 
-/* Opciones del jefe: 4 en círculo, sin colores distintivos */
+/* Opciones del jefe: 5 en cruz (2 arriba, 1 centro, 2 abajo) — rediseñado sin superposición */
 .cq-opts.circle4{
-  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
-  gap:20px;position:relative;width:100%;max-width:260px;aspect-ratio:1;margin:18px auto 6px;
+  display:grid;
+  grid-template-columns:repeat(2, 86px);
+  grid-template-areas:
+    "a b"
+    "c c"
+    "d e";
+  justify-content:center;
+  align-content:start;
+  row-gap:18px;column-gap:26px;
+  width:100%;margin:20px auto 8px;
 }
+.cq-opts.circle4 .cq-opt:nth-child(1){ grid-area:a; }
+.cq-opts.circle4 .cq-opt:nth-child(2){ grid-area:b; }
+.cq-opts.circle4 .cq-opt:nth-child(3){ grid-area:c; justify-self:center; }
+.cq-opts.circle4 .cq-opt:nth-child(4){ grid-area:d; }
+.cq-opts.circle4 .cq-opt:nth-child(5){ grid-area:e; }
 .cq-opts.circle4 .cq-opt{
-  position:static;width:auto;height:auto;aspect-ratio:1;border-radius:50%;
+  position:static;width:86px;height:86px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;padding:0;
-  background:linear-gradient(135deg,#2b2b45,#1a1a2e)!important;
-  border-color:rgba(255,255,255,0.28)!important;
-  box-shadow:0 5px 16px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.12)!important;
+  background:#1f1f2c!important;
+  border:2px solid rgba(255,255,255,0.08)!important;
+  box-shadow:none!important;
+  animation:none;
 }
-.cprog{display:none;}
-.cpip,.cpip.done,.cpip.active,.cpip.wrong{}
+.cq-opts.circle4 .cq-opt::before{ content:none; }
+.cq-opts.circle4 .cq-opt:hover{ border-color:#00d2b4!important; }
+.cq-opts.circle4 .cq-opt.ok{
+  background:rgba(0,210,180,0.25)!important;
+  border-color:#00d2b4!important;
+  box-shadow:none!important;
+}
+.cq-opts.circle4 .cq-opt.no{
+  background:rgba(255,59,59,0.25)!important;
+  border-color:#ff3b3b!important;
+  box-shadow:none!important;
+}
+/* ── Puente de planchas (jefe final): reemplaza los pips por un puente con el astronauta ── */
+.cprog{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:4px 3px;
+  max-width:320px;margin:2px auto 10px;padding:10px 6px 16px;
+  position:relative;
+}
+.cprog.bridge::before,.cprog.bridge::after{
+  content:'';position:absolute;left:4px;right:4px;height:3px;
+  background:repeating-linear-gradient(90deg,#8a5a2b 0 8px,#6b4520 8px 10px);
+  border-radius:2px;
+}
+.cprog.bridge::before{ top:6px; }
+.cprog.bridge::after{ bottom:8px; }
+.cpip{
+  width:22px;height:22px;border-radius:3px;
+  background:linear-gradient(160deg,#a0703a,#7a5228);
+  border:1px solid rgba(0,0,0,0.35);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.15);
+  position:relative;z-index:1;
+}
+.cpip.done{ background:linear-gradient(160deg,#2fbf9a,#1a8f73); }
+.cpip.wrong{ background:linear-gradient(160deg,#e05656,#a63333); opacity:0.75; }
+.cpip.active{
+  background:linear-gradient(160deg,#f0c040,#d99a1e);
+  box-shadow:0 0 8px rgba(240,192,64,0.8),inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.boss-hearts{ font-size:22px; letter-spacing:6px; margin-bottom:2px; }
+.boss-points{ color:#ffcc33; font-family:'Fredoka One'; font-size:16px; margin-bottom:8px; }
+.cpip-runner{
+  position:absolute;left:50%;bottom:100%;margin-bottom:2px;
+  transform:translateX(-50%);
+  width:26px;height:26px;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,0.6));
+  animation:runnerBob 0.5s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+@keyframes runnerBob{ from{transform:translateX(-50%) translateY(0);} to{transform:translateX(-50%) translateY(-4px);} }
 .cresult{font-family:'Fredoka One';font-size:18px;margin-top:4px;min-height:32px;}
 
 /* BOSS HP bar */
@@ -1911,6 +1972,66 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
   cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;white-space:nowrap;
 }
 .admin-mini-danger{ color:#ff7070;border-color:rgba(255,90,90,0.3); }
+
+/* ── VENTANA FLOTANTE: HISTORIAL DE ERRORES DE TODOS LOS COFRES ── */
+#mistakesFloatModal{
+  position:fixed;inset:0;z-index:600;display:none;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);
+  padding:16px;
+}
+.mf-box{
+  background:linear-gradient(160deg,#1a0010,#26001a,#0a0018);
+  border:3px solid #ff4477;border-radius:26px;
+  padding:18px 16px 16px;
+  width:min(380px,95vw);max-height:88vh;
+  display:flex;flex-direction:column;
+  text-align:center;
+  box-shadow:0 0 60px rgba(255,40,90,0.45),0 20px 60px rgba(0,0,0,0.85);
+  animation:popIn 0.32s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.mf-heart{
+  font-size:38px;margin-bottom:2px;
+  animation:mfHeartBeat 0.7s ease-in-out;
+}
+@keyframes mfHeartBeat{0%{transform:scale(1)}30%{transform:scale(1.3)}55%{transform:scale(0.9)}100%{transform:scale(1)}}
+.mf-title{
+  color:#ff5577;font-family:'Fredoka One';font-size:19px;margin-bottom:2px;
+  text-shadow:0 0 14px rgba(255,60,100,0.7);
+}
+.mf-current-op{
+  color:#fff;font-family:'Fredoka One';font-size:30px;margin:8px 0 4px;
+  text-shadow:0 0 16px rgba(255,150,80,0.6);
+}
+.mf-phrase{
+  color:#ffd166;font-size:13px;font-weight:800;margin-bottom:10px;
+  padding:0 4px;
+}
+.mf-history-label{
+  color:rgba(255,170,190,0.6);font-size:10px;font-weight:800;letter-spacing:0.6px;
+  text-transform:uppercase;margin:6px 0 6px;text-align:left;
+}
+.mf-history{
+  overflow-y:auto;flex:1;min-height:0;
+  display:flex;flex-direction:column;gap:6px;
+  padding-right:2px;margin-bottom:12px;
+}
+.mf-history-item{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;padding:7px 10px;
+  font-size:12px;color:rgba(255,255,255,0.85);text-align:left;
+}
+.mf-history-op{font-family:'Fredoka One';font-size:14px;color:#ff8899;white-space:nowrap;}
+.mf-history-planet{font-size:10px;color:rgba(200,190,255,0.55);}
+.mf-continue-btn{
+  background:linear-gradient(135deg,#ff4477,#ff8c42);
+  border:none;border-radius:50px;padding:13px 36px;
+  color:#fff;font-family:'Fredoka One';font-size:16px;
+  cursor:pointer;box-shadow:0 6px 20px rgba(255,68,119,0.5);
+  transition:transform 0.1s;
+}
+.mf-continue-btn:active{transform:scale(0.94);}
 </style>
 </head>
 <body>
@@ -2422,6 +2543,10 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
       <div class="creward">⚡ Energía</div>
       <div class="creward">❤️ Vida</div>
     </div>
+    <div id="bossLivesRow" style="display:none;">
+      <div id="bossHearts" class="boss-hearts"></div>
+      <div id="bossPoints" class="boss-points">PUNTOS: 0</div>
+    </div>
     <!-- Barra de progreso verde→roja -->
     <div class="cprog-bar-wrap">
       <div class="cprog-bar-fill" id="chestProgBar"></div>
@@ -2442,6 +2567,8 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
       <div class="cq-opts" id="chestQOpts"></div>
     </div>
     <div class="cresult" id="chestResult"></div>
+    <div id="chestWrongOp" style="display:none;font-family:'Fredoka One';font-size:26px;color:#ffd166;text-shadow:0 0 14px #ff8800;margin:8px 0 4px;"></div>
+    <button class="review-continue-btn" id="chestContinueBtn">Continuar ➜</button>
   </div>
 </div>
 
@@ -2522,6 +2649,19 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
     <button class="review-continue-btn" id="reviewContinueBtn">
       ¡Entendido, continuar! 🚀
     </button>
+  </div>
+</div>
+
+<!-- VENTANA FLOTANTE: HISTORIAL DE ERRORES DE TODOS LOS COFRES (normales y jefe final) -->
+<div id="mistakesFloatModal">
+  <div class="mf-box">
+    <div class="mf-heart">💔</div>
+    <div class="mf-title">¡Perdiste una vida!</div>
+    <div class="mf-current-op" id="mfCurrentOp">? × ? = ?</div>
+    <div class="mf-phrase" id="mfPhrase">¡Tú puedes lograrlo!</div>
+    <div class="mf-history-label">📋 Errores de todos los cofres (<span id="mfHistoryCount">0</span>)</div>
+    <div class="mf-history" id="mfHistoryList"></div>
+    <button class="mf-continue-btn" id="mfContinueBtn">Continuar ➜</button>
   </div>
 </div>
 
@@ -9024,6 +9164,8 @@ function buildLevel(table){
   }
 
   // Build enemies — snap Y to terrain
+  // Los guardianes (jefes de cofre) tienen la mitad de vida que el jefe final del planeta
+  const guardianHp = Math.round(((15 + G.planet * 2) * 10) / 2);
   G.enemies = layout.enemyXs.map((ex,i) => {
     const ty = terrainYAt(ex + 16);
     return {
@@ -9033,9 +9175,10 @@ function buildLevel(table){
       dead:false, deadTimer:0, frame:0, ft:0, frozen:false,
       table: pl.isFinal ? 0 : tbl,
       multiplier: i+1,
-      hp:5, maxHp:5,
+      hp:guardianHp, maxHp:guardianHp,
       monsterStyle: eStyle.type,
       floats: eStyle.floats || false,
+      isChestGuardian: true,
     };
   });
 
@@ -9389,6 +9532,21 @@ function generateOptions(correct, tableStep){
   return shuffleArr(opts);
 }
 
+// 5 opciones (cruz de círculos, jefe final) — igual que generateOptions pero con un distractor más
+function generateOptions5(correct, tableStep){
+  const step = Math.max(1, tableStep||1);
+  let opts = [correct];
+  let attempts = 0;
+  while(opts.length<5 && attempts<300){
+    attempts++;
+    let w = correct + (Math.floor(Math.random()*10)-5)*step;
+    if(w<0) w = correct + step*(Math.floor(Math.random()*4)+1);
+    if(!opts.includes(w) && w!==correct) opts.push(w);
+  }
+  let fb=1; while(opts.length<5){if(!opts.includes(fb))opts.push(fb);fb++;}
+  return shuffleArr(opts);
+}
+
 // Abrir desafío de cofre
 function openChestChallenge(chest){
   if(G.state==='chestchallenge' || G.state==='mooncard' || G.state==='bosschest') return;
@@ -9437,6 +9595,7 @@ function openChestChallenge(chest){
   // ── NORMAL PLANET CHESTS: quiz challenge ─────────────────
   G.state='chestchallenge';
   { const tw=document.getElementById('chestTimerWrap'); if(tw) tw.style.display='none'; }
+  { const lr=document.getElementById('bossLivesRow'); if(lr) lr.style.display='none'; }
 
   const planet = G.planet;
   const prize = CHEST_PRIZES[Math.min(planet, CHEST_PRIZES.length-1)];
@@ -9475,7 +9634,7 @@ function renderChestQuestion(){
   const progBar = document.getElementById('chestProgBar');
   if(progBar){ progBar.style.width = '0%'; }
 
-  const prog = document.getElementById('chestProg'); if(prog) prog.innerHTML='';
+  const prog = document.getElementById('chestProg'); if(prog){ prog.innerHTML=''; prog.classList.remove('bridge'); }
 
   document.getElementById('chestQNum').textContent = `Pregunta 1 de 1`;
 
@@ -9546,6 +9705,71 @@ function renderChestQuestion(){
   }
 }
 
+// ═══════════════════════════════════════════════════════════
+//  HISTORIAL GLOBAL DE ERRORES — de TODOS los cofres (normales y jefe final)
+//  Se acumula durante toda la sesión y se muestra en una ventana flotante nueva
+// ═══════════════════════════════════════════════════════════
+const MISTAKES_HISTORY = [];
+const MISTAKE_MOTIVATION_PHRASES = [
+  '¡Tú puedes lograrlo, sigue intentando!',
+  '¡Los errores te ayudan a aprender más rápido!',
+  '¡No te rindas, cada vez lo haces mejor!',
+  '¡Respira y sigue adelante, vas muy bien!',
+  '¡Eres muy valiente por seguir jugando!',
+  '¡Un pequeño tropiezo no te detiene!',
+  '¡Practica esta tabla y la dominarás pronto!',
+  '¡Cada error te hace un explorador más fuerte!',
+  '¡Vamos, la próxima la aciertas seguro!',
+  '¡Sigue así, estás aprendiendo muchísimo!'
+];
+
+// Agrega un error al historial global y abre la ventana flotante con todo lo acumulado.
+// Llama a onContinue() cuando el jugador toca "Continuar".
+function logMistakeAndShowFloat(a, b, answer, onContinue){
+  const planetName = (typeof PLANETS!=='undefined' && G.planet!=null && PLANETS[G.planet]) ? PLANETS[G.planet].name : '';
+  const phrase = MISTAKE_MOTIVATION_PHRASES[Math.floor(Math.random()*MISTAKE_MOTIVATION_PHRASES.length)];
+  MISTAKES_HISTORY.push({a, b, answer, planetName, phrase});
+
+  const modal = document.getElementById('mistakesFloatModal');
+  const opEl = document.getElementById('mfCurrentOp');
+  const phraseEl = document.getElementById('mfPhrase');
+  const countEl = document.getElementById('mfHistoryCount');
+  const listEl = document.getElementById('mfHistoryList');
+  const btn = document.getElementById('mfContinueBtn');
+
+  if(opEl) opEl.textContent = `${a} × ${b} = ${answer}`;
+  if(phraseEl) phraseEl.textContent = phrase;
+  if(countEl) countEl.textContent = MISTAKES_HISTORY.length;
+  if(listEl){
+    listEl.innerHTML = MISTAKES_HISTORY.map(m=>
+      `<div class="mf-history-item">
+         <span class="mf-history-op">${m.a} × ${m.b} = ${m.answer}</span>
+         <span class="mf-history-planet">${m.planetName||''}</span>
+       </div>`
+    ).join('');
+    listEl.scrollTop = listEl.scrollHeight;
+  }
+
+  speak(`Perdiste una vida. ${a} por ${b} son ${answer}. ${phrase}`, 0.85, 0.9);
+
+  if(modal) modal.style.display='flex';
+  if(btn){
+    btn.onclick = ()=>{
+      btn.onclick = null;
+      if(modal) modal.style.display='none';
+      onContinue();
+    };
+  } else {
+    onContinue();
+  }
+}
+
+// Muestra la operación y su resultado en pantalla, lo lee en voz alta,
+// y espera a que el jugador toque "Continuar" antes de seguir.
+function showChestContinue(a, b, answer, onContinue){
+  logMistakeAndShowFloat(a, b, answer, onContinue);
+}
+
 function answerChest(ok, btn, correct){
   const dc = G.chestChallenge;
   if(ok){
@@ -9565,11 +9789,14 @@ function answerChest(ok, btn, correct){
     feedbackWrong(document.getElementById('chestResult'), correct);
     G.doorLives = Math.max(0, G.doorLives-1);
     updateHUD();
-    // Al fallar: solo mostrar cuál era la respuesta correcta y volver a intentar
+    // Al fallar: mostrar la operación y su resultado en voz alta, y esperar a que toque Continuar
+    const q = dc.questions[0];
     setTimeout(()=>{
-      dc.animating=false;
-      renderChestQuestion();
-    }, 1200);
+      showChestContinue(q.a, q.b, q.answer, ()=>{
+        dc.animating=false;
+        renderChestQuestion();
+      });
+    }, 600);
   }
 }
 
@@ -9659,7 +9886,7 @@ function finishChestChallenge(){
       if(pb){ pb.style.transition='none'; pb.style.width='0%'; setTimeout(()=>{ pb.style.transition='width 0.4s ease'; }, 50); }
 
       // Actualizar progreso visual (pips legacy - ocultos)
-      const prog = document.getElementById('chestProg'); if(prog) prog.innerHTML='';
+      const prog = document.getElementById('chestProg'); if(prog){ prog.innerHTML=''; prog.classList.remove('bridge'); }
 
       // Subtítulo con aviso de reintento
       const attempts = (chest._attempts = (chest._attempts||1) + 1);
@@ -10713,7 +10940,7 @@ function update(){
             color:i<4?'#ffffff':i<8?'#ffcc00':i<11?'#ff8800':'#ff4400',
             life:14,ml:14,a:1});
         }
-        floatText('-1', e.x-G.cameraX+e.w/2, e.y-16, '#ff8800');
+        floatText('-'+dmg, e.x-G.cameraX+e.w/2, e.y-16, '#ff8800');
         // El guardián llama a una oleada de vasayos cuando lo dañan (HP 4 y HP 2)
         const idx = G.enemies.indexOf(e);
         if(e.hp===4 || e.hp===2){
@@ -10733,12 +10960,13 @@ function update(){
       }
     });
     if(hit) return false;
-    // Hit BOSS — takes 1 damage per bullet (needs many shots)
+    // Hit BOSS — el daño depende del nivel de disparo del arma equipada
     if(!hit && G.boss && !G.boss.dead){
       const bs=G.boss;
       if(b.x>bs.x&&b.x<bs.x+bs.w&&b.y>bs.y&&b.y<bs.y+bs.h){
         hit=true;
-        bs.hp=Math.max(0,bs.hp-1);
+        const dmgBoss = b.damage || 1;
+        bs.hp=Math.max(0,bs.hp-dmgBoss);
         sfx('laserHit');
         for(let i=0;i<18;i++){
           const a=Math.random()*Math.PI*2;
@@ -10748,7 +10976,7 @@ function update(){
             color:i<5?'#ffffff':i<10?'#ff4400':i<14?'#ffcc00':'#ff0044',
             life:18,ml:18,a:1});
         }
-        floatText('-1', bs.x-G.cameraX+bs.w/2, bs.y-14, '#ff4444');
+        floatText('-'+dmgBoss, bs.x-G.cameraX+bs.w/2, bs.y-14, '#ff4444');
         // Boss rage phases
         if(bs.hp===Math.floor(bs.maxHp*0.6)||bs.hp===Math.floor(bs.maxHp*0.3)){
           floatText('💢 ¡BOSS ENFURECIDO!', bs.x-G.cameraX-60, bs.y-50, '#ff0000');
@@ -11005,10 +11233,19 @@ function update(){
       if(P.vx>0&&P.x+P.w/2<pp.x+pp.w/2){P.x=pp.x-P.w;P.vx=0;}
       else if(P.vx<0&&P.x+P.w/2>pp.x+pp.w/2){P.x=pp.x+pp.w;P.vx=0;}
     }
-    // Parado encima del tubo + presiona ABAJO → entra a la cueva
+    // Parado encima del tubo + presiona ABAJO → entra a la cueva (bloqueado hasta abrir todos los cofres de guardianes)
     if(P.onPipeTop && keys.down && !pp.challenged){
-      pp.challenged=true;
-      triggerPipeCinematic();
+      const unopened = (G.chests||[]).filter(c=>!c.opened).length;
+      if(unopened>0){
+        if(!pp._warnTimer || Date.now()-pp._warnTimer>1200){
+          pp._warnTimer = Date.now();
+          sfx('wrong');
+          floatText(`🔒 ¡Abre los ${unopened} cofre${unopened>1?'s':''} de guardianes primero!`, pp.x-G.cameraX-60, pp.y-50, '#ff4444');
+        }
+      } else {
+        pp.challenged=true;
+        triggerPipeCinematic();
+      }
     }
   }
 
@@ -13029,7 +13266,8 @@ function drawEnemy(ex,e){
     ctx.fillStyle='#fff';ctx.font='bold 11px Nunito';ctx.textAlign='center';
     ctx.fillText(`×${e.multiplier}`,ex+e.w/2,e.y-20);ctx.textAlign='left';
 
-    if(G.battleEnemy===e){
+    // Barra de vida del guardián (jefe de cofre): visible siempre que esté vivo, no solo en duelo
+    if(e.isChestGuardian){
       const barW=60,barH=10,barX=ex+e.w/2-barW/2,barY=e.y-42;
       ctx.fillStyle='rgba(0,0,0,0.7)';ctx.beginPath();ctx.roundRect(barX-2,barY-2,barW+4,barH+4,4);ctx.fill();
       ctx.fillStyle='#1a0000';ctx.beginPath();ctx.roundRect(barX,barY,barW,barH,3);ctx.fill();
@@ -13647,6 +13885,16 @@ function generateBossChestQuestions(table){
   return [...ordered, ...random];
 }
 
+function updateBossLivesRow(){
+  const hEl = document.getElementById('bossHearts');
+  const pEl = document.getElementById('bossPoints');
+  if(hEl){
+    const lives = Math.max(0, Math.min(5, G.doorLives));
+    hEl.textContent = '❤️'.repeat(lives) + '🤍'.repeat(5-lives);
+  }
+  if(pEl) pEl.textContent = `PUNTOS: ${G.score||0}`;
+}
+
 function openBossChestChallenge(chest){
   if(G.state==='chestchallenge'||G.state==='bosschest') return;
   G.state='bosschest';
@@ -13668,6 +13916,8 @@ function openBossChestChallenge(chest){
   };
 
   { const tw=document.getElementById('chestTimerWrap'); if(tw) tw.style.display='none'; }
+  { const lr=document.getElementById('bossLivesRow'); if(lr) lr.style.display='block'; }
+  updateBossLivesRow();
 
   // Reuse chest modal with boss styling
   document.getElementById('chestIcon').textContent='👑';
@@ -13742,29 +13992,35 @@ function renderBossChestQuestion(){
   const q=dc.questions[dc.current];
   const isOrder=dc.current<10;
 
-  // Progress bar (20 pips, split in 2 rows of 10)
+  // Puente de 20 planchas (2 filas de 10): el astronauta del jugador avanza plancha a plancha
   const prog=document.getElementById('chestProg'); prog.innerHTML='';
-  prog.style.flexWrap='wrap';
-  prog.style.maxWidth='320px';
+  prog.classList.add('bridge');
   for(let i=0;i<20;i++){
     const p=document.createElement('div'); p.className='cpip';
-    p.style.width='22px';
     if(i<dc.current){ p.classList.add(dc.results[i]==='ok'?'done':'wrong'); }
-    else if(i===dc.current) p.classList.add('active');
+    else if(i===dc.current){
+      p.classList.add('active');
+      const runner=document.createElement('canvas'); runner.className='cpip-runner';
+      runner.width=52; runner.height=52;
+      p.appendChild(runner);
+      const char = typeof getActiveChar==='function' ? getActiveChar() : {colorIdx:1,hatIdx:0};
+      if(typeof drawAmongUsSmall==='function') drawAmongUsSmall(runner, char.colorIdx||1, char.hatIdx||0);
+    }
     prog.appendChild(p);
   }
+  updateBossLivesRow();
 
   const phaseLabel = isOrder ? '🔢 En orden' : '🔀 Al azar';
   const phaseNum = isOrder ? dc.current+1 : dc.current-9;
   const totalInPhase = 10;
-  document.getElementById('chestQNum').textContent=`${phaseLabel} — Pregunta ${phaseNum} de ${totalInPhase}`;
+  document.getElementById('chestQNum').textContent=`🌉 Puente ${dc.current+1} de 20 — ${phaseLabel} (${phaseNum}/${totalInPhase})`;
   document.getElementById('chestSub').textContent= isOrder
     ? `🔢 Fase 1: En orden (${dc.current+1}/10)`
     : `🔀 Fase 2: Al azar (${dc.current-9}/10)`;
   document.getElementById('chestQText').textContent=q.text;
   speak(q.speech);
 
-  const opts=generateOptions(q.answer,q.step||1);
+  const opts=generateOptions5(q.answer,q.step||1);
   const oc=document.getElementById('chestQOpts'); oc.innerHTML=''; oc.classList.add('circle4');
   opts.forEach(o=>{
     const btn=document.createElement('div');
@@ -13826,6 +14082,7 @@ function answerBossChest(ok,btn,correct){
     if(btn) btn.classList.add('ok');
     dc.results.push('ok');
     sessionStats.correct++;
+    G.score += 10; updateHUD(); updateBossLivesRow();
     const praise = BOSS_PRAISE[Math.floor(Math.random()*BOSS_PRAISE.length)];
     feedbackCorrect(document.getElementById('chestResult'),'✅ '+praise+' 💥');
 
@@ -13850,26 +14107,21 @@ function answerBossChest(ok,btn,correct){
     dc.results.push('no');
     sessionStats.wrong++;
     feedbackWrong(document.getElementById('chestResult'),correct);
-    G.doorLives=Math.max(0,G.doorLives-1); updateHUD();
-    // Show review card then restart the ENTIRE challenge (must get all 20 right)
+    G.doorLives=Math.max(0,G.doorLives-1); updateHUD(); updateBossLivesRow();
+    // Al fallar: mostrar la operación y su resultado en voz alta, y esperar a que toque Continuar
+    const q2=dc.questions[dc.current];
     setTimeout(()=>{
-      dc.animating=false;
-      const q2=dc.questions[dc.current];
-      document.getElementById('chestModal').style.display='none';
-      showReviewCard(q2.a,q2.b,()=>{
-        // Restart from question 1
-        { const tw=document.getElementById('chestTimerWrap'); if(tw) tw.style.display='none'; }
-        dc.current=0; dc.results=[];
-        const planet=G.planet;
-        const table=PLANETS[planet].table;
-        dc.questions=generateBossChestQuestions(table);
-        dc.chest._attempts=(dc.chest._attempts||1)+1;
-        document.getElementById('chestSub').textContent=`🔄 Intento ${dc.chest._attempts} — ¡Acierta las 20 para abrir!`;
-        floatText('🔒 ¡Debes acertar las 20 seguidas!',W/2-160,H*0.35,'#ff4444');
-        document.getElementById('chestModal').style.display='flex';
-        renderBossChestQuestion();
-      }, q2.type);
-    },900);
+      showChestContinue(q2.a, q2.b, q2.answer, ()=>{
+        dc.animating=false;
+        dc.current++;
+        if(dc.current===10){
+          document.getElementById('chestSub').textContent='🔀 ¡Fase 2! Ahora al azar…';
+          floatText('🔀 ¡Fase 2! Al azar…', W/2-90, H*0.35,'#f0c040');
+        }
+        if(dc.current>=20) finishBossChestChallenge();
+        else renderBossChestQuestion();
+      });
+    },600);
   }
 }
 
@@ -14960,6 +15212,10 @@ function playerShoot(){
   if(P.shootCooldown>0) return;
 
   const ammo = AMMO_TYPES[activeAmmoType];
+  // Nivel de disparo y precisión del arma equipada en la tienda (x1 a x64)
+  const _wpn = (typeof getActiveWeapon==='function') ? getActiveWeapon() : null;
+  const wpnDamageMult = (_wpn && _wpn.damage) ? _wpn.damage : 1;
+  const wpnPrecision = (_wpn && _wpn.precision!=null) ? _wpn.precision : 1;
   // Consumir munición (tipo 0 es infinito)
   if(activeAmmoType !== 0){
     if(ammoInventory[activeAmmoType] <= 0){ activeAmmoType=0; updateAmmoUI(); }
@@ -14996,8 +15252,8 @@ function playerShoot(){
     vy = -1.5;
   }
 
-  // Spread según tipo
-  const spread = (Math.random()-0.5)*ammo.spread;
+  // Spread según tipo, reducido por la precisión del arma equipada (armas de mayor nivel = más precisas)
+  const spread = (Math.random()-0.5)*ammo.spread*wpnPrecision;
   const angle = Math.atan2(vy,vx) + spread;
   G.playerBullets.push({
     x:bx, y:by,
@@ -15009,7 +15265,7 @@ function playerShoot(){
     explosive: ammo.explosive,
     freeze: ammo.freeze,
     chain: ammo.chain,
-    damage: ammo.damage,
+    damage: ammo.damage*wpnDamageMult,
     color: ammo.color,
     trailColor: ammo.trailColor,
   });
@@ -16405,8 +16661,10 @@ const WEAPONS = [
     id: 'plasma',
     name: 'Cañón de Plasma',
     emoji: '⚡',
-    desc: 'Dispara plasma verde. ¡Potente!',
+    desc: 'Nivel de disparo x2 — más daño y más precisión.',
     price: 150,
+    damage: 2,
+    precision: 0.8,
     color: '#1a4a1a',
     barrelColor: '#0a3a0a',
     glowColor: '#00ff88',
@@ -16437,8 +16695,10 @@ const WEAPONS = [
     id: 'fuego',
     name: 'Lanzallamas',
     emoji: '🔥',
-    desc: 'Dispara fuego. ¡El enemigo tiembla!',
+    desc: 'Nivel de disparo x4 — mucho más daño y precisión.',
     price: 300,
+    damage: 4,
+    precision: 0.6,
     color: '#4a1a00',
     barrelColor: '#6a2a00',
     glowColor: '#ff6600',
@@ -16470,8 +16730,10 @@ const WEAPONS = [
     id: 'rayos',
     name: 'Bastón de Rayos',
     emoji: '⚡🌩️',
-    desc: 'Dispara rayos eléctricos. ¡Zap!',
+    desc: 'Nivel de disparo x8 — daño alto y disparo muy preciso.',
     price: 500,
+    damage: 8,
+    precision: 0.4,
     color: '#1a1a5a',
     barrelColor: '#2a2a8a',
     glowColor: '#aaaaff',
@@ -16500,8 +16762,10 @@ const WEAPONS = [
     id: 'arcoiris',
     name: 'Arma Arcoíris',
     emoji: '🌈',
-    desc: '¡La más poderosa y colorida del universo!',
+    desc: 'Nivel de disparo x16 — súper poderosa y muy precisa.',
     price: 999,
+    damage: 16,
+    precision: 0.25,
     color: '#3a003a',
     barrelColor: '#5a005a',
     glowColor: '#ff88ff',
@@ -16525,6 +16789,83 @@ const WEAPONS = [
         ctx.shadowBlur=30; ctx.shadowColor=`hsl(${hue},100%,80%)`;
         ctx.fillStyle=`hsl(${hue},100%,85%)`;
         ctx.beginPath(); ctx.arc(px+pw+22, gunY, 7, 0, Math.PI*2); ctx.fill();
+        ctx.shadowBlur=0;
+      }
+    }
+  },
+  {
+    id: 'antimateria',
+    name: 'Cañón de Antimateria',
+    emoji: '🌌',
+    desc: 'Nivel de disparo x32 — daño devastador y disparo casi perfecto.',
+    price: 2500,
+    damage: 32,
+    precision: 0.12,
+    color: '#0a0022',
+    barrelColor: '#1a0044',
+    glowColor: '#8844ff',
+    draw(ctx, px, py, pw, ph, dir, shootCooldown){
+      const gunY = py + ph * 0.5;
+      if(dir < 0){ ctx.translate(px+pw/2,0); ctx.scale(-1,1); ctx.translate(-(px+pw/2),0); }
+      // Cuerpo oscuro con núcleo violeta
+      ctx.fillStyle = this.color;
+      ctx.beginPath(); ctx.roundRect(px+pw-6, gunY-6, 24, 12, 4); ctx.fill();
+      ctx.fillStyle = this.barrelColor;
+      ctx.beginPath(); ctx.roundRect(px+pw+14, gunY-4, 10, 8, 2); ctx.fill();
+      // Núcleo de antimateria pulsante
+      const t = Date.now()*0.02;
+      const glowAlpha = 0.6 + 0.4*Math.sin(t);
+      ctx.shadowBlur=18; ctx.shadowColor=this.glowColor;
+      ctx.fillStyle=`rgba(136,68,255,${glowAlpha})`;
+      ctx.beginPath(); ctx.arc(px+pw+5, gunY, 5, 0, Math.PI*2); ctx.fill();
+      // Anillo orbital
+      ctx.strokeStyle=`rgba(200,150,255,${glowAlpha})`; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.ellipse(px+pw+5, gunY, 9, 4, t, 0, Math.PI*2); ctx.stroke();
+      ctx.shadowBlur=0;
+      if(shootCooldown>14){
+        ctx.shadowBlur=34; ctx.shadowColor='#aa66ff';
+        ctx.fillStyle='rgba(170,102,255,0.98)';
+        ctx.beginPath(); ctx.arc(px+pw+24, gunY, 8, 0, Math.PI*2); ctx.fill();
+        ctx.shadowBlur=0;
+      }
+    }
+  },
+  {
+    id: 'cosmica',
+    name: 'Arma Definitiva Cósmica',
+    emoji: '👑',
+    desc: 'Nivel de disparo x64 — ¡la más poderosa y precisa del universo!',
+    price: 6000,
+    damage: 64,
+    precision: 0.05,
+    color: '#2a1a00',
+    barrelColor: '#4a3000',
+    glowColor: '#ffd700',
+    draw(ctx, px, py, pw, ph, dir, shootCooldown){
+      const gunY = py + ph * 0.5;
+      if(dir < 0){ ctx.translate(px+pw/2,0); ctx.scale(-1,1); ctx.translate(-(px+pw/2),0); }
+      // Cuerpo dorado imperial
+      const grad = ctx.createLinearGradient(px+pw-6, gunY-6, px+pw+26, gunY+6);
+      grad.addColorStop(0,'#ffd700'); grad.addColorStop(0.5,'#ff8c00'); grad.addColorStop(1,'#ffec80');
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.roundRect(px+pw-6, gunY-6, 26, 12, 5); ctx.fill();
+      ctx.fillStyle = this.barrelColor;
+      ctx.beginPath(); ctx.roundRect(px+pw+16, gunY-4, 10, 8, 2); ctx.fill();
+      // Núcleo estelar pulsante con destellos
+      const t = Date.now()*0.025;
+      const glowAlpha = 0.7 + 0.3*Math.sin(t);
+      ctx.shadowBlur=22; ctx.shadowColor=this.glowColor;
+      ctx.fillStyle=`rgba(255,215,0,${glowAlpha})`;
+      ctx.beginPath(); ctx.arc(px+pw+5, gunY, 6, 0, Math.PI*2); ctx.fill();
+      ctx.shadowBlur=0;
+      // Doble anillo de energía
+      ctx.strokeStyle=`rgba(255,236,128,${glowAlpha})`; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.ellipse(px+pw+5, gunY, 11, 5, t, 0, Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(px+pw+5, gunY, 8, 3, -t, 0, Math.PI*2); ctx.stroke();
+      if(shootCooldown>14){
+        ctx.shadowBlur=40; ctx.shadowColor='#fff2a0';
+        ctx.fillStyle='rgba(255,240,160,0.98)';
+        ctx.beginPath(); ctx.arc(px+pw+28, gunY, 9, 0, Math.PI*2); ctx.fill();
         ctx.shadowBlur=0;
       }
     }
