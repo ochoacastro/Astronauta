@@ -310,50 +310,92 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
   backdrop-filter:blur(10px);
 }
 .pause-box{
-  background:linear-gradient(135deg,#070720,#12083a);
-  border:3px solid rgba(120,80,255,0.6);
+  background:linear-gradient(180deg,#dff1ff 0%,#c7e6ff 100%);
+  border:3px solid #7fc4f5;
   border-radius:28px;
-  padding:32px 24px 28px;
+  padding:0 0 22px;
   width:min(320px,90vw);
   text-align:center;
-  box-shadow:0 0 60px rgba(100,60,255,0.35),0 20px 60px rgba(0,0,0,0.7);
+  box-shadow:0 0 0 6px rgba(255,255,255,0.5) inset,0 20px 60px rgba(0,0,0,0.5);
   animation:popIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+  overflow:hidden;
 }
-.pause-icon{font-size:52px;margin-bottom:8px;line-height:1;}
+.pause-icon{font-size:44px;margin:14px 0 2px;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,0.25));}
 .pause-title{
   font-family:'Fredoka One';font-size:26px;
-  color:#fff;letter-spacing:0.5px;margin-bottom:4px;
+  color:#fff;letter-spacing:1px;margin-bottom:0;
+  background:linear-gradient(180deg,#ff6fa6,#e8447a);
+  padding:14px 0 20px;
+  text-shadow:0 2px 0 rgba(0,0,0,0.2);
+  border-bottom:3px solid #c22a5e;
 }
-.pause-sub{color:rgba(180,160,255,0.7);font-size:13px;margin-bottom:24px;}
+.pause-sub{color:#4a6b8a;font-size:12px;font-weight:700;margin:10px 0 16px;}
+.pause-volumes{
+  background:rgba(255,255,255,0.55);
+  border-radius:18px;margin:0 20px 16px;padding:12px 14px 6px;
+  border:2px solid rgba(255,255,255,0.7);
+}
+.pause-vol-row{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.pause-vol-icon{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  background:radial-gradient(circle at 35% 30%,#8fd4ff,#2f9fe0);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.pause-vol-label{font-family:'Fredoka One';font-size:12px;color:#2a4a63;width:44px;text-align:left;flex-shrink:0;}
+.pause-vol-slider{
+  flex:1;-webkit-appearance:none;appearance:none;
+  height:12px;border-radius:8px;
+  background:linear-gradient(90deg,#ffb03c 0%,#ffb03c var(--val,80%),#bcd8ec var(--val,80%),#bcd8ec 100%);
+  outline:none;cursor:pointer;
+}
+.pause-vol-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:20px;height:20px;border-radius:50%;
+  background:#fff;border:3px solid #2f9fe0;
+  box-shadow:0 2px 4px rgba(0,0,0,0.35);cursor:pointer;
+}
+.pause-vol-slider::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;
+  background:#fff;border:3px solid #2f9fe0;
+  box-shadow:0 2px 4px rgba(0,0,0,0.35);cursor:pointer;
+}
 .pause-btn{
-  width:100%;padding:14px 0;border-radius:16px;border:none;
+  width:calc(100% - 40px);padding:14px 0;border-radius:16px;border:none;
   font-family:'Fredoka One';font-size:18px;cursor:pointer;
-  margin-bottom:10px;transition:all 0.15s;letter-spacing:0.3px;
+  margin:0 20px 10px;transition:all 0.15s;letter-spacing:0.3px;
+  display:block;
 }
 .pause-btn:active{transform:scale(0.96);}
 .pause-resume{
-  background:linear-gradient(135deg,#4f46e5,#7c3aed);
+  background:linear-gradient(180deg,#8bef6a,#4fc72f);
+  border-bottom:4px solid #2f8a17;
   color:#fff;
-  box-shadow:0 4px 18px rgba(124,58,237,0.45);
+  text-shadow:0 1px 0 rgba(0,0,0,0.2);
+  box-shadow:0 4px 14px rgba(50,180,20,0.4);
 }
-.pause-resume:active{box-shadow:0 2px 8px rgba(124,58,237,0.4);}
+.pause-resume:active{border-bottom-width:2px;transform:translateY(2px) scale(0.98);}
 .pause-map{
-  background:rgba(255,255,255,0.07);
-  border:2px solid rgba(255,255,255,0.15);
-  color:rgba(220,200,255,0.85);
+  background:linear-gradient(180deg,#8fd4ff,#3fa0e8);
+  border-bottom:4px solid #1f6faf;
+  color:#fff;
+  text-shadow:0 1px 0 rgba(0,0,0,0.15);
 }
 .pause-exit{
-  background:rgba(220,30,30,0.15);
-  border:2px solid rgba(255,60,60,0.35);
-  color:rgba(255,140,140,0.9);
-  margin-bottom:0;
+  background:linear-gradient(180deg,#ff9a8f,#e8503d);
+  border-bottom:4px solid #ad2e1f;
+  color:#fff;
+  text-shadow:0 1px 0 rgba(0,0,0,0.15);
+  margin-bottom:14px;
 }
 .pause-info{
-  margin-top:18px;display:flex;justify-content:center;gap:18px;
-  padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);
+  margin:4px 20px 0;display:flex;justify-content:center;gap:18px;
+  padding-top:14px;border-top:2px dashed rgba(60,110,150,0.25);
 }
-.pause-stat{color:rgba(200,180,255,0.6);font-size:12px;font-weight:700;text-align:center;}
-.pause-stat span{display:block;font-size:18px;color:#fff;margin-bottom:2px;}
+.pause-stat{color:#3f6889;font-size:12px;font-weight:700;text-align:center;}
+.pause-stat span{display:block;font-size:18px;color:#1f3f5c;margin-bottom:2px;font-family:'Fredoka One';}
 
 /* CHEST MODAL */
 #chestModal{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;
@@ -1297,6 +1339,22 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
   touch-action:pan-y;
   overscroll-behavior:contain;
 }
+/* Luna decorativa de fondo, estilo "candy menu" */
+#startScreen::before{
+  content:'';
+  position:fixed;top:0;right:0;width:260px;height:260px;z-index:0;pointer-events:none;
+  background:radial-gradient(circle at 68% 28%, rgba(255,248,210,0.95) 0%, rgba(255,244,190,0.55) 26%, rgba(255,230,160,0.15) 45%, transparent 62%);
+}
+/* Siluetas de montañas decorativas, fijas al fondo de la pantalla */
+#startScreen::after{
+  content:'';
+  position:fixed;left:0;right:0;bottom:0;height:180px;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(75deg, transparent 0%, transparent 42%, rgba(60,32,80,0.55) 44%, rgba(60,32,80,0.55) 58%, transparent 60%),
+    linear-gradient(105deg, transparent 0%, transparent 8%, rgba(45,20,65,0.6) 10%, rgba(45,20,65,0.6) 26%, transparent 28%),
+    linear-gradient(65deg, transparent 0%, transparent 70%, rgba(35,15,55,0.65) 72%, rgba(35,15,55,0.65) 92%, transparent 94%),
+    linear-gradient(0deg, rgba(20,8,35,0.7) 0%, transparent 65%);
+}
 
 /* ═══════════════════════════════════════════════════════
    ROUTE MAP — DUOLINGO SPACE STYLE
@@ -1483,10 +1541,24 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 #profileModal{
   position:fixed;inset:0;z-index:8000;
   display:none;align-items:stretch;justify-content:center;
-  background:#06060f;
+  background: linear-gradient(180deg, #0f0c29 0%, #302b63 40%, #24243e 100%);
+}
+#profileModal::before{
+  content:'';
+  position:fixed;top:0;right:0;width:260px;height:260px;z-index:0;pointer-events:none;
+  background:radial-gradient(circle at 68% 28%, rgba(255,248,210,0.95) 0%, rgba(255,244,190,0.55) 26%, rgba(255,230,160,0.15) 45%, transparent 62%);
+}
+#profileModal::after{
+  content:'';
+  position:fixed;left:0;right:0;bottom:0;height:180px;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(75deg, transparent 0%, transparent 42%, rgba(60,32,80,0.55) 44%, rgba(60,32,80,0.55) 58%, transparent 60%),
+    linear-gradient(105deg, transparent 0%, transparent 8%, rgba(45,20,65,0.6) 10%, rgba(45,20,65,0.6) 26%, transparent 28%),
+    linear-gradient(65deg, transparent 0%, transparent 70%, rgba(35,15,55,0.65) 72%, rgba(35,15,55,0.65) 92%, transparent 94%),
+    linear-gradient(0deg, rgba(20,8,35,0.7) 0%, transparent 65%);
 }
 .prof-modal-box{
-  background:#06060f;
+  background:transparent;
   border:none;
   border-radius:0;
   padding:0 0 40px;
@@ -1495,6 +1567,7 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
   animation:slideUp 0.32s cubic-bezier(0.175,0.885,0.32,1.275);
   height:100%;overflow-y:auto;
   display:flex;flex-direction:column;
+  position:relative;z-index:1;
 }
 @keyframes slideUp{
   from{transform:translateY(100%);opacity:0}
@@ -1514,9 +1587,9 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 }
 .prof-modal-avatar-big{
   width:82px;height:100px;border-radius:20px;
-  border:2px solid rgba(0,212,255,0.35);
+  border:2.5px solid #ffcf5c;
   overflow:hidden;flex-shrink:0;background:#08081a;
-  box-shadow:0 0 22px rgba(0,212,255,0.18);
+  box-shadow:0 0 22px rgba(255,180,60,0.35);
 }
 .prof-modal-avatar{
   width:56px;height:68px;border-radius:14px;
@@ -1528,9 +1601,9 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 }
 .prof-modal-sub{
   display:inline-block;margin-top:5px;
-  background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.3);
+  background:rgba(255,180,60,0.18);border:1px solid rgba(255,207,92,0.5);
   border-radius:20px;padding:3px 12px;
-  color:#a8e6ff;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;
+  color:#ffcf5c;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;
 }
 .prof-modal-edit{
   margin-left:auto;
@@ -1549,50 +1622,55 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 .prof-ql-item{
   display:flex;flex-direction:column;align-items:center;gap:2px;
   border-radius:16px;padding:10px 4px;cursor:pointer;
-  border:none;font-family:inherit;transition:transform 0.15s;
+  border:none;font-family:inherit;transition:transform 0.1s;
 }
-.prof-ql-item:active{ transform:scale(0.94); }
+.prof-ql-item:active{ transform:translateY(2px); }
 .prof-ql-planets{
-  background:rgba(0,212,255,0.1);border:1.5px solid rgba(0,212,255,0.3);
+  background:linear-gradient(180deg,#8fd4ff,#3fa0e8);
+  border-bottom:3px solid #1f6faf;
+  box-shadow:0 3px 8px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.4);
   cursor:default;
 }
 .prof-ql-shop{
-  background:linear-gradient(135deg,rgba(255,215,0,0.22),rgba(255,150,0,0.12));
-  border:1.5px solid rgba(255,215,0,0.45);
+  background:linear-gradient(180deg,#ffcf5c,#ff9d1e);
+  border-bottom:3px solid #c26a00;
+  box-shadow:0 3px 8px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .prof-ql-cards{
-  background:linear-gradient(135deg,rgba(160,96,255,0.22),rgba(120,60,220,0.12));
-  border:1.5px solid rgba(160,96,255,0.45);
+  background:linear-gradient(180deg,#c69bff,#9a55f0);
+  border-bottom:3px solid #6a2fc4;
+  box-shadow:0 3px 8px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .prof-ql-icon{font-size:22px;line-height:1;}
-.prof-ql-val{font-family:'Fredoka One';font-size:15px;color:#fff;}
-.prof-ql-planets .prof-ql-val{color:#a8e6ff;}
-.prof-ql-shop .prof-ql-val{color:#ffd700;}
-.prof-ql-cards .prof-ql-val{color:#c090ff;}
-.prof-ql-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:0.5px;text-transform:uppercase;}
+.prof-ql-val{font-family:'Fredoka One';font-size:15px;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,0.25);}
+.prof-ql-planets .prof-ql-val{color:#fff;}
+.prof-ql-shop .prof-ql-val{color:#fff;}
+.prof-ql-cards .prof-ql-val{color:#fff;}
+.prof-ql-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.85);letter-spacing:0.5px;text-transform:uppercase;text-shadow:0 1px 0 rgba(0,0,0,0.2);}
 
 /* Tabs — botones grandes con ícono, pensados para niños */
 .prof-tabs{
   display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
   margin:16px 20px 0;
-  background:rgba(255,255,255,0.03);
+  background:rgba(0,0,0,0.25);
   border-radius:18px;padding:6px;
-  border:1px solid rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
 }
 .prof-tab{
   display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:10px 2px;border-radius:14px;
   font-family:'Fredoka One';font-size:10px;
-  color:rgba(255,255,255,0.35);cursor:pointer;
+  color:rgba(255,255,255,0.45);cursor:pointer;
   text-align:center;transition:all 0.2s;
   border:none;background:none;letter-spacing:0.2px;
 }
 .prof-tab-icon{font-size:22px;line-height:1;}
 .prof-tab-txt{line-height:1.1;}
 .prof-tab.active{
-  background:linear-gradient(135deg,rgba(0,212,255,0.18),rgba(160,96,255,0.14));
-  color:#fff;
-  box-shadow:0 0 0 1.5px rgba(0,212,255,0.35) inset;
+  background:linear-gradient(180deg,#ffcf5c,#ff9d1e);
+  color:#7a3b00;
+  box-shadow:0 3px 0 #c26a00,inset 0 1px 0 rgba(255,255,255,0.5);
+  text-shadow:none;
 }
 /* Tab panels */
 .prof-tab-panel{display:none;padding:18px 20px 0;}
@@ -1603,7 +1681,7 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
   display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;
 }
 .prof-stat-card{
-  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,207,92,0.25);
   border-radius:16px;padding:16px 8px;text-align:center;
 }
 .prof-stat-icon{font-size:22px;margin-bottom:4px;line-height:1;}
@@ -1661,46 +1739,51 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 /* Botón cerrar — al fondo */
 .prof-close-btn{
   width:calc(100% - 40px);margin:16px 20px 0;
-  padding:14px;border:none;border-radius:14px;
-  background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);
+  padding:14px;border:3px solid #7a3b00;border-radius:50px;
+  background:linear-gradient(180deg, #ffe58a, #ffb02e 55%, #ff8a00);
+  color:#7a3b00;
   font-family:'Fredoka One';font-size:15px;cursor:pointer;
-  transition:all 0.15s;letter-spacing:0.5px;
+  transition:all 0.12s;letter-spacing:0.5px;
+  text-shadow:0 1px 0 rgba(255,255,255,0.35);
+  box-shadow:0 4px 0 #a34e00,0 8px 16px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.5);
   margin-top:auto;
 }
-.prof-close-btn:hover{color:rgba(255,255,255,0.6);}
+.prof-close-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a34e00,0 3px 8px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.5);}
 
 /* Botón despegar — estilo portal de energía */
 .sbtn{
-  background: linear-gradient(135deg, #003080, #0060c0, #00a0e0);
-  border: none; border-radius: 50px;
+  background: linear-gradient(180deg, #ffe58a, #ffb02e 55%, #ff8a00);
+  border: 3px solid #7a3b00; border-radius: 50px;
   padding: 15px 52px;
-  color: #fff; font-family:'Fredoka One'; font-size: 20px; cursor: pointer;
-  transition: all 0.15s;
+  color: #7a3b00; font-family:'Fredoka One'; font-size: 20px; cursor: pointer;
+  transition: all 0.12s;
   box-shadow:
-    0 0 0 1px rgba(0,180,255,0.3),
-    0 4px 20px rgba(0,120,255,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.2);
+    0 5px 0 #a34e00,
+    0 10px 20px rgba(0,0,0,0.4),
+    inset 0 2px 0 rgba(255,255,255,0.6);
+  text-shadow:0 1px 0 rgba(255,255,255,0.35);
   letter-spacing: 0.3px;
   position: relative; overflow: hidden;
 }
 .sbtn::after{
   content:'';position:absolute;inset:0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
   transform: translateX(-100%);
   transition: transform 0.4s;
 }
 .sbtn:hover::after{ transform: translateX(100%); }
-.sbtn:active{ transform: scale(0.97); box-shadow: 0 2px 10px rgba(0,120,255,0.4); }
+.sbtn:active{ transform: translateY(4px); box-shadow: 0 1px 0 #a34e00, 0 4px 10px rgba(0,0,0,0.35), inset 0 2px 0 rgba(255,255,255,0.6); }
 
 #mapHeader{
   position:sticky;top:0;left:0;right:0;z-index:30;width:100%;
-  background: rgba(0,2,12,0.92);
+  background: linear-gradient(180deg, rgba(48,22,60,0.95), rgba(20,10,35,0.95));
   padding:10px 16px 11px;
   display:flex;align-items:center;justify-content:space-between;
-  border-bottom: 1px solid rgba(0,180,255,0.08);
+  border-bottom: 2px solid rgba(255,180,60,0.35);
+  border-radius: 0 0 18px 18px;
   flex-shrink:0;
   backdrop-filter:blur(20px);
-  box-shadow: 0 1px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
 }
 .map-header-left{display:flex;flex-direction:row;align-items:center;gap:8px;}
 .map-header-logo{
@@ -1734,9 +1817,10 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
 .map-stat-pill small{font-size:11px;font-weight:700;color:rgba(160,220,255,0.85);letter-spacing:0.5px;text-transform:uppercase;}
 .map-avatar-btn{
   width:38px;height:38px;border-radius:50%;
-  border:1.5px solid rgba(0,200,255,0.2);
+  border:2px solid #ffcf5c;
   cursor:pointer;overflow:hidden;
   background:#030a18;flex-shrink:0;
+  box-shadow:0 0 8px rgba(255,180,60,0.4);
   transition:border-color 0.2s, box-shadow 0.2s;
 }
 .map-avatar-btn:hover{
@@ -1761,20 +1845,22 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
   cursor:pointer;transition:transform 0.15s;
   border:none;
 }
-.map-shop-btn:active, .map-cards-btn:active{ transform:scale(0.94); }
+.map-shop-btn:active, .map-cards-btn:active{ transform:translateY(2px) scale(0.96); }
 .map-shop-btn{
-  background:linear-gradient(135deg,rgba(255,215,0,0.22),rgba(255,150,0,0.12));
-  border:1.5px solid rgba(255,215,0,0.45);
+  background:linear-gradient(180deg,#ffcf5c,#ff9d1e);
+  border-bottom:3px solid #c26a00;
+  box-shadow:0 3px 8px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.5);
 }
 .map-cards-btn{
-  background:linear-gradient(135deg,rgba(160,96,255,0.22),rgba(120,60,220,0.12));
-  border:1.5px solid rgba(160,96,255,0.45);
+  background:linear-gradient(180deg,#c69bff,#9a55f0);
+  border-bottom:3px solid #6a2fc4;
+  box-shadow:0 3px 8px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.5);
 }
 .map-shop-btn .mhb-icon, .map-cards-btn .mhb-icon{font-size:18px;line-height:1;}
-.map-shop-btn .mhb-val{font-family:'Fredoka One';font-size:14px;color:#ffd700;}
-.map-cards-btn .mhb-val{font-family:'Fredoka One';font-size:14px;color:#c090ff;}
-.map-shop-btn .mhb-lbl{font-family:'Fredoka One';font-size:11px;font-weight:700;color:#ffe680;letter-spacing:0.5px;text-transform:uppercase;}
-.map-cards-btn .mhb-lbl{font-family:'Fredoka One';font-size:11px;font-weight:700;color:#d8b8ff;letter-spacing:0.5px;text-transform:uppercase;}
+.map-shop-btn .mhb-val{font-family:'Fredoka One';font-size:14px;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,0.25);}
+.map-cards-btn .mhb-val{font-family:'Fredoka One';font-size:14px;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,0.25);}
+.map-shop-btn .mhb-lbl{font-family:'Fredoka One';font-size:11px;font-weight:700;color:#fff5da;letter-spacing:0.5px;text-transform:uppercase;text-shadow:0 1px 0 rgba(0,0,0,0.2);}
+.map-cards-btn .mhb-lbl{font-family:'Fredoka One';font-size:11px;font-weight:700;color:#f2e6ff;letter-spacing:0.5px;text-transform:uppercase;text-shadow:0 1px 0 rgba(0,0,0,0.2);}
 
 /* ── TIENDA UNIFICADA — diseño "stage" con vista previa grande ── */
 #shopModal{
@@ -2588,6 +2674,18 @@ canvas{display:block;position:fixed;top:0;left:0;pointer-events:none;}
     <div class="pause-icon">🚀</div>
     <div class="pause-title">PAUSA</div>
     <div class="pause-sub" id="pauseSub">Descansa un momento, astronauta</div>
+    <div class="pause-volumes">
+      <div class="pause-vol-row">
+        <div class="pause-vol-icon">🎵</div>
+        <div class="pause-vol-label">Música</div>
+        <input type="range" class="pause-vol-slider" id="musicVolSlider" min="0" max="100" value="80" oninput="setMusicVolume(this.value)">
+      </div>
+      <div class="pause-vol-row">
+        <div class="pause-vol-icon">🔊</div>
+        <div class="pause-vol-label">Sonido</div>
+        <input type="range" class="pause-vol-slider" id="sfxVolSlider" min="0" max="100" value="80" oninput="setSfxVolume(this.value)">
+      </div>
+    </div>
     <button class="pause-btn pause-resume" id="pauseResume">▶ Continuar</button>
     <button class="pause-btn pause-map" id="pauseMap">🗺️ Volver al Mapa</button>
     <button class="pause-btn pause-exit" id="pauseExit">🚪 Salir del juego</button>
@@ -3230,6 +3328,37 @@ function terrainYAt(worldX){
 const keys = {left:false, right:false, shoot:false, down:false};
 let stars = [];
 let ac; // AudioContext - shared across sfx + Netflix intro
+let sfxMasterGain; // nodo maestro para controlar el volumen de todos los efectos de sonido
+function ensureSfxGain(){
+  if(!sfxMasterGain){
+    sfxMasterGain = ac.createGain();
+    sfxMasterGain.gain.value = (typeof G!=='undefined' && G.sfxVolume!=null) ? G.sfxVolume : 0.8;
+    sfxMasterGain.connect(ac.destination);
+  }
+  return sfxMasterGain;
+}
+function getVoiceVolume(){
+  return (typeof G!=='undefined' && G.musicVolume!=null) ? G.musicVolume : 0.8;
+}
+function setMusicVolume(val){
+  const v = Math.max(0, Math.min(100, parseFloat(val))) / 100;
+  G.musicVolume = v;
+  localStorage.setItem(profileKey('musicVolume'), String(v));
+  ['moonBgMusic','bossBgMusic','planetBgMusic'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.volume = 0.35 * v;
+  });
+  const slider = document.getElementById('musicVolSlider');
+  if(slider) slider.style.setProperty('--val', (v*100)+'%');
+}
+function setSfxVolume(val){
+  const v = Math.max(0, Math.min(100, parseFloat(val))) / 100;
+  G.sfxVolume = v;
+  localStorage.setItem(profileKey('sfxVolume'), String(v));
+  if(sfxMasterGain) sfxMasterGain.gain.value = v;
+  const slider = document.getElementById('sfxVolSlider');
+  if(slider) slider.style.setProperty('--val', (v*100)+'%');
+}
 
 // ═══════════════════════════════════════════════════════════
 //  PARALLAX BACKGROUND SYSTEM
@@ -4815,6 +4944,8 @@ const G = {
   cave:null, caveStudied:false,
   guardiansKilled:0,
   totalGuardians:10,
+  sfxVolume: parseFloat(localStorage.getItem(profileKey('sfxVolume'))||'0.8'),
+  musicVolume: parseFloat(localStorage.getItem(profileKey('musicVolume'))||'0.8'),
 };
 const P = {x:80,y:0,vx:0,vy:0,w:28,h:36,onGround:false,dir:1,frame:0,ft:0,invincible:0,state:'idle',shootCooldown:0,jumpsLeft:2,grenades:3,shootFrame:0};
 
@@ -5116,7 +5247,7 @@ function speak(text, rate=1.0, pitch=0.8, onEnd=null){
     u.lang = 'es-419';
     u.rate = rate;
     u.pitch = pitch;
-    u.volume = 1;
+    u.volume = getVoiceVolume();
     if(maleVoice) u.voice = maleVoice;
     if(onEnd) u.onend = onEnd;
     if(ss.getVoices().length === 0){
@@ -5618,12 +5749,13 @@ function fireRoverGun(){
   // Sonido ametralladora más sutil
   try{
     if(!ac) ac=new(window.AudioContext||window.webkitAudioContext)();
+    ensureSfxGain();
     const n=ac.currentTime;
     const o=ac.createOscillator(), g=ac.createGain();
     o.type='square';
     o.frequency.setValueAtTime(900,n); o.frequency.exponentialRampToValueAtTime(300,n+0.05);
     g.gain.setValueAtTime(0.12,n); g.gain.exponentialRampToValueAtTime(0.001,n+0.07);
-    o.connect(g); g.connect(ac.destination); o.start(n); o.stop(n+0.08);
+    o.connect(g); g.connect(sfxMasterGain); o.start(n); o.stop(n+0.08);
   }catch(e){}
   // Flash de disparo pequeño
   G._shakeTimer=1; G._shakeDX=Math.cos(ang)*1.5; G._shakeDY=Math.sin(ang)*1.5;
@@ -5648,18 +5780,19 @@ function fireRoverCannon(){
   // Sonido cañón potente
   try{
     if(!ac) ac=new(window.AudioContext||window.webkitAudioContext)();
+    ensureSfxGain();
     const n=ac.currentTime;
     const o=ac.createOscillator(), g=ac.createGain();
     o.type='sawtooth';
     o.frequency.setValueAtTime(120,n); o.frequency.exponentialRampToValueAtTime(40,n+0.35);
     g.gain.setValueAtTime(0.55,n); g.gain.exponentialRampToValueAtTime(0.001,n+0.4);
-    o.connect(g); g.connect(ac.destination); o.start(n); o.stop(n+0.45);
+    o.connect(g); g.connect(sfxMasterGain); o.start(n); o.stop(n+0.45);
     // Chirrido de energía
     const o2=ac.createOscillator(), g2=ac.createGain();
     o2.type='square';
     o2.frequency.setValueAtTime(2000,n); o2.frequency.exponentialRampToValueAtTime(200,n+0.25);
     g2.gain.setValueAtTime(0.2,n); g2.gain.exponentialRampToValueAtTime(0.001,n+0.28);
-    o2.connect(g2); g2.connect(ac.destination); o2.start(n); o2.stop(n+0.3);
+    o2.connect(g2); g2.connect(sfxMasterGain); o2.start(n); o2.stop(n+0.3);
   }catch(e){}
   // Flash y sacudida potentes
   G._shakeTimer=18; G._shakeDX=Math.cos(ang)*6; G._shakeDY=Math.sin(ang)*6;
@@ -5680,6 +5813,7 @@ function fireRoverCannon(){
 function sfxRoverEngine(){
   try{
     if(!ac) ac = new(window.AudioContext||window.webkitAudioContext)();
+    ensureSfxGain();
     const n = ac.currentTime;
     // Rumble grave de motor lunar
     const o = ac.createOscillator();
@@ -5689,7 +5823,7 @@ function sfxRoverEngine(){
     o.frequency.linearRampToValueAtTime(45, n+0.12);
     g.gain.setValueAtTime(0.13, n);
     g.gain.exponentialRampToValueAtTime(0.001, n+0.18);
-    o.connect(g); g.connect(ac.destination);
+    o.connect(g); g.connect(sfxMasterGain);
     o.start(n); o.stop(n+0.2);
     // Chasquido de rueda (textura)
     const o2 = ac.createOscillator(), g2 = ac.createGain();
@@ -5698,7 +5832,7 @@ function sfxRoverEngine(){
     o2.frequency.exponentialRampToValueAtTime(80, n+0.06);
     g2.gain.setValueAtTime(0.07, n);
     g2.gain.exponentialRampToValueAtTime(0.001, n+0.08);
-    o2.connect(g2); g2.connect(ac.destination);
+    o2.connect(g2); g2.connect(sfxMasterGain);
     o2.start(n); o2.stop(n+0.1);
   }catch(e){}
 }
@@ -7365,7 +7499,7 @@ function speakMoonCard(text, rate, pitch, onEnd){
     // Small delay after cancel to avoid Chrome/iOS silent-fail bug
     setTimeout(()=>{
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'es-419'; u.rate = rate||1; u.pitch = pitch||0.8; u.volume = 1;
+      u.lang = 'es-419'; u.rate = rate||1; u.pitch = pitch||0.8; u.volume = getVoiceVolume();
       if(maleVoice) u.voice = maleVoice;
       const est = Math.max(800, text.length * 110);
       let called = false;
@@ -7588,7 +7722,7 @@ function _renderCardZoom(){
     window.speechSynthesis.cancel();
     setTimeout(()=>{
       const u = new SpeechSynthesisUtterance(`${card.table} por ${card.mult}`);
-      u.lang='es-419'; u.rate=0.9; u.pitch=0.85;
+      u.lang='es-419'; u.rate=0.9; u.pitch=0.85; u.volume = getVoiceVolume();
       if(maleVoice) u.voice = maleVoice;
       window.speechSynthesis.speak(u);
     }, 80);
@@ -7611,6 +7745,7 @@ function _flipCardZoom(){
       u.lang='es-419';
       u.rate = _zoomFlipped ? 0.8 : 0.9;
       u.pitch = _zoomFlipped ? 1.2 : 0.85;
+      u.volume = getVoiceVolume();
       if(maleVoice) u.voice = maleVoice;
       window.speechSynthesis.speak(u);
     }, 80);
@@ -7687,7 +7822,7 @@ function speakCave(text, rate, pitch, onEnd){
     u.lang = 'es-419';
     u.rate = rate || 1.0;
     u.pitch = pitch || 0.8;
-    u.volume = 1;
+    u.volume = getVoiceVolume();
     if(maleVoice) u.voice = maleVoice;
     if(onEnd){
       const charRate = 12 / (rate || 1.0);
@@ -7862,7 +7997,7 @@ function speakAndWait(text, rate, pitch, onStart){
     u.lang = 'es-419';
     u.rate = rate || 0.85;
     u.pitch = pitch || 0.85;
-    u.volume = 1;
+    u.volume = getVoiceVolume();
     if(maleVoice) u.voice = maleVoice;
 
     // Estimar duración basada en caracteres y velocidad
@@ -9299,7 +9434,7 @@ const PLANET_LAYOUTS = {
 function playMoonMusic(){
   const el = document.getElementById('moonBgMusic');
   if(!el) return;
-  el.volume = 0.35;
+  el.volume = 0.35 * getVoiceVolume();
   el.currentTime = 0;
   el.play().catch(()=>{});
 }
@@ -9313,7 +9448,7 @@ function stopMoonMusic(){
 function playBossMusic(){
   const el = document.getElementById('bossBgMusic');
   if(!el || !el.paused) return;
-  el.volume = 0.35;
+  el.volume = 0.35 * getVoiceVolume();
   el.play().catch(()=>{});
 }
 function stopBossMusic(){
@@ -9326,7 +9461,7 @@ function stopBossMusic(){
 function playPlanetMusic(){
   const el = document.getElementById('planetBgMusic');
   if(!el || !el.paused) return;
-  el.volume = 0.35;
+  el.volume = 0.35 * getVoiceVolume();
   el.play().catch(()=>{});
 }
 function stopPlanetMusic(){
@@ -15190,6 +15325,9 @@ function openPause(){
     `${PLANETS[G.planet]?.name||''} — Tabla ×${PLANETS[G.planet]?.table||''}`;
   document.getElementById('pauseModal').style.display = 'flex';
   document.getElementById('pauseBtn').textContent = '▶';
+  // Sincronizar sliders de volumen con los valores guardados
+  { const ms = document.getElementById('musicVolSlider'); if(ms){ ms.value = G.musicVolume*100; ms.style.setProperty('--val', (G.musicVolume*100)+'%'); } }
+  { const ss = document.getElementById('sfxVolSlider'); if(ss){ ss.value = G.sfxVolume*100; ss.style.setProperty('--val', (G.sfxVolume*100)+'%'); } }
 }
 
 function closePause(){
@@ -15976,8 +16114,9 @@ function dustBurst(x,y){
 function sfx(t){
   try{
     if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();
+    ensureSfxGain();
     const o=ac.createOscillator(),g=ac.createGain();
-    o.connect(g);g.connect(ac.destination);const n=ac.currentTime;
+    o.connect(g);g.connect(sfxMasterGain);const n=ac.currentTime;
     switch(t){
       case'jump':o.frequency.setValueAtTime(300,n);o.frequency.exponentialRampToValueAtTime(600,n+0.1);g.gain.setValueAtTime(0.3,n);g.gain.exponentialRampToValueAtTime(0.001,n+0.15);break;
       case'shoot':o.type='square';o.frequency.setValueAtTime(800,n);o.frequency.exponentialRampToValueAtTime(200,n+0.1);g.gain.setValueAtTime(0.2,n);g.gain.exponentialRampToValueAtTime(0.001,n+0.12);break;
@@ -15985,7 +16124,7 @@ function sfx(t){
         o.type='square';
         o.frequency.setValueAtTime(1200,n);o.frequency.exponentialRampToValueAtTime(300,n+0.08);
         g.gain.setValueAtTime(0.18,n);g.gain.exponentialRampToValueAtTime(0.001,n+0.1);
-        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='sine';o2.connect(g2);g2.connect(ac.destination);
+        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='sine';o2.connect(g2);g2.connect(sfxMasterGain);
         o2.frequency.setValueAtTime(2400,n);o2.frequency.exponentialRampToValueAtTime(600,n+0.07);
         g2.gain.setValueAtTime(0.1,n);g2.gain.exponentialRampToValueAtTime(0.001,n+0.09);o2.start(n);o2.stop(n+0.1);}
         break;
@@ -16010,7 +16149,7 @@ function sfx(t){
         o.frequency.setValueAtTime(380,n);o.frequency.exponentialRampToValueAtTime(70,n+0.18);
         o.frequency.setValueAtTime(180,n+0.2);o.frequency.exponentialRampToValueAtTime(30,n+0.5);
         g.gain.setValueAtTime(0.5,n);g.gain.exponentialRampToValueAtTime(0.001,n+0.55);
-        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='square';o2.connect(g2);g2.connect(ac.destination);
+        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='square';o2.connect(g2);g2.connect(sfxMasterGain);
         o2.frequency.setValueAtTime(900,n);o2.frequency.exponentialRampToValueAtTime(180,n+0.3);
         g2.gain.setValueAtTime(0.22,n);g2.gain.exponentialRampToValueAtTime(0.001,n+0.3);o2.start(n);o2.stop(n+0.6);}
         break;
@@ -16018,7 +16157,7 @@ function sfx(t){
         // Crack + rising chime — triunfante
         o.type='square';o.frequency.setValueAtTime(130,n);o.frequency.exponentialRampToValueAtTime(55,n+0.09);
         g.gain.setValueAtTime(0.45,n);g.gain.exponentialRampToValueAtTime(0.001,n+0.13);
-        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='triangle';o2.connect(g2);g2.connect(ac.destination);
+        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='triangle';o2.connect(g2);g2.connect(sfxMasterGain);
         o2.frequency.setValueAtTime(440,n+0.06);o2.frequency.setValueAtTime(660,n+0.17);o2.frequency.setValueAtTime(880,n+0.28);
         g2.gain.setValueAtTime(0,n);g2.gain.setValueAtTime(0.38,n+0.06);g2.gain.exponentialRampToValueAtTime(0.001,n+0.55);
         o2.start(n);o2.stop(n+0.65);}
@@ -16031,7 +16170,7 @@ function sfx(t){
         bubbleTimes.forEach((bt,i)=>{
           const ob=ac.createOscillator(),gb=ac.createGain();
           ob.type='sine';
-          ob.connect(gb);gb.connect(ac.destination);
+          ob.connect(gb);gb.connect(sfxMasterGain);
           const f=bubbleFreqs[i];
           ob.frequency.setValueAtTime(f*1.15,n+bt);
           ob.frequency.exponentialRampToValueAtTime(f*0.55,n+bt+0.07);
@@ -16042,7 +16181,7 @@ function sfx(t){
         });
         // Chispa etérea final
         const og=ac.createOscillator(),gg=ac.createGain();
-        og.type='sine';og.connect(gg);gg.connect(ac.destination);
+        og.type='sine';og.connect(gg);gg.connect(sfxMasterGain);
         og.frequency.setValueAtTime(1400,n+1.05);og.frequency.exponentialRampToValueAtTime(1800,n+1.3);
         gg.gain.setValueAtTime(0,n+1.05);gg.gain.linearRampToValueAtTime(0.06,n+1.1);
         gg.gain.exponentialRampToValueAtTime(0.001,n+1.4);
@@ -16054,7 +16193,7 @@ function sfx(t){
         [523,659,784,1047,1319].forEach((f,i)=>{ o.frequency.setValueAtTime(f,n+i*0.1); });
         g.gain.setValueAtTime(0.35,n);g.gain.setValueAtTime(0.35,n+0.45);
         g.gain.exponentialRampToValueAtTime(0.001,n+0.9);
-        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='square';o2.connect(g2);g2.connect(ac.destination);
+        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='square';o2.connect(g2);g2.connect(sfxMasterGain);
         o2.frequency.setValueAtTime(1047,n+0.05);o2.frequency.setValueAtTime(784,n+0.2);
         o2.frequency.setValueAtTime(1047,n+0.35);o2.frequency.setValueAtTime(1319,n+0.5);
         g2.gain.setValueAtTime(0.15,n+0.05);g2.gain.setValueAtTime(0.15,n+0.7);
@@ -16069,7 +16208,7 @@ function sfx(t){
         g.gain.linearRampToValueAtTime(0.35,n+0.03);
         g.gain.setValueAtTime(0.35,n+0.26);
         g.gain.exponentialRampToValueAtTime(0.001,n+0.4);
-        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='square';o2.connect(g2);g2.connect(ac.destination);
+        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='square';o2.connect(g2);g2.connect(sfxMasterGain);
         o2.frequency.setValueAtTime(555,n);
         g2.gain.setValueAtTime(0,n);g2.gain.linearRampToValueAtTime(0.12,n+0.03);
         g2.gain.setValueAtTime(0.12,n+0.26);g2.gain.exponentialRampToValueAtTime(0.001,n+0.4);
@@ -16081,7 +16220,7 @@ function sfx(t){
         o.frequency.setValueAtTime(60,n);o.frequency.exponentialRampToValueAtTime(220,n+1.5);
         g.gain.setValueAtTime(0.2,n);g.gain.linearRampToValueAtTime(0.55,n+0.5);
         g.gain.linearRampToValueAtTime(0.35,n+1.4);g.gain.exponentialRampToValueAtTime(0.001,n+1.8);
-        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='square';o2.connect(g2);g2.connect(ac.destination);
+        {const o2=ac.createOscillator(),g2=ac.createGain();o2.type='square';o2.connect(g2);g2.connect(sfxMasterGain);
         o2.frequency.setValueAtTime(120,n);o2.frequency.exponentialRampToValueAtTime(400,n+1.5);
         g2.gain.setValueAtTime(0.12,n);g2.gain.linearRampToValueAtTime(0.25,n+0.4);
         g2.gain.exponentialRampToValueAtTime(0.001,n+1.8);o2.start(n);o2.stop(n+2.0);}
@@ -18185,6 +18324,7 @@ function _storySpeak(index){
   u.lang = 'es-ES';
   u.rate = 0.92;
   u.pitch = 0.85;
+  u.volume = getVoiceVolume();
   // Intentar voz en español
   const voices = window.speechSynthesis.getVoices();
   const esVoice = voices.find(v => v.lang.startsWith('es') && !v.name.toLowerCase().includes('compact'))
